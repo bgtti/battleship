@@ -6,6 +6,7 @@
     --borderRadius: 10%;
     --cNavyBlue: #1f2b44;
     --cBeige: #b5875e;
+    --cRed: #811c2c;
     --cNavyBlueFilter: invert(16%) sepia(9%) saturate(2787%) hue-rotate(183deg) brightness(92%) contrast(95%);
     --cBeigeFilter: invert(54%) sepia(39%) saturate(459%) hue-rotate(347deg) brightness(98%) contrast(84%);
 }
@@ -83,8 +84,7 @@ body{
     flex-grow:10;
     margin: var(--marginSmall) 0 var(--marginSmall) 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 }
 .message-container{
     display: flex;
@@ -109,6 +109,56 @@ body{
     background-color: var(--cNavyBlue);
     border: 2px solid var(--cNavyBlue);
     color: var(--cBeige);
+}
+
+/* Boards */
+.boards-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: var(--marginBig);
+}
+.player-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--marginSmall)
+}
+.board-p1, .board-p2{
+    border: 1px solid var(--cNavyBlue);
+    /* height: 400px;
+    width: 400px; */
+    /* display: flex;
+    flex-wrap: wrap; */
+    display: grid;
+    grid-template-rows: repeat(8, 50px);
+    grid-template-columns: repeat(8, 50px);
+    
+}
+/* .board-1{
+    background-color: blue;
+}
+.board-2{
+background-color: rgb(255, 0, 98);
+} */
+.coord-div{
+    /* height: 50px;
+    width: 50px; */
+    border: 1px solid var(--cNavyBlue);
+    display: flex;
+        align-items: center;
+        justify-content: center;
+}
+
+/* Coord hit */
+.spot-hit-green, .spot-hit-red{
+    font-size: 50px;
+}
+.spot-hit-green{
+    color: green;
+}
+.spot-hit-red{
+    color: var(--cRed);
 }
 
 

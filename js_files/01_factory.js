@@ -1,5 +1,5 @@
 //factory function: making ships
-function createShip(length) {
+function CreateShip(length) {
     return {
         shipLength: length, ///ver re realmente necessario
         shipPosition: [],
@@ -25,10 +25,10 @@ function createShip(length) {
 
 //Gameboard factory
 //Should create 2 boards
-function gameboardFactory() {
+function GameboardFactory() {
     return {
         boardReady: false, //checks if all ships have been placed
-        ships: [createShip(3), createShip(2)],
+        ships: [CreateShip(3), CreateShip(2)],
         missedAttacks: [],
         shipsSunken: 0,
 
@@ -40,9 +40,11 @@ function gameboardFactory() {
         },
         receiveAttack(coord) {
             let missed = true;
+            let shipAttacked = false;
             for (let ship of this.ships) {
                 if (ship.shipPosition.includes(coord)) {
                     missed = false;
+                    shipAttacked = true;
                     ship.hit(coord);
                     if (ship.hasSunken === true) {
                         this.shipsSunken++;
@@ -52,6 +54,7 @@ function gameboardFactory() {
             if (missed === true) {
                 this.missedAttacks.push(coord)
             }
+            return shipAttacked
         },
         allShipsSunken() {
             if (this.ships.length === this.shipsSunken) {
@@ -63,12 +66,12 @@ function gameboardFactory() {
 }
 
 //Player
-function createPlayer(type) {
+function CreatePlayer(type) {
     return {
         playerType: type, //computer or human
         playersTurn: false, //true or false
-        shotPositions: [],
-        playersBoard: gameboardFactory(),
+        shotPositions: [], //positions shot on the other player's board
+        playersBoard: GameboardFactory(),
         checkIfMoveLegal(coord) {
             if (this.shotPositions.includes(coord)) {
                 return false
@@ -85,8 +88,10 @@ function createPlayer(type) {
 
 }
 
-module.exports = {
-    createShip,
-    gameboardFactory,
-    createPlayer
+
+
+export {
+    CreateShip,
+    GameboardFactory,
+    CreatePlayer
 }

@@ -83,6 +83,13 @@ function CreatePlayer(type) {
         },
         computerShooting() {
             //check if a coord free, then shoot it
+            function generateRandomCoord() { return Math.floor((Math.random() * 64) + 1) };
+            let randomCoord = generateRandomCoord();
+            while (this.shotPositions.includes(randomCoord)) {
+                randomCoord = generateRandomCoord();
+            }
+            return randomCoord;
+
         }
     }
 

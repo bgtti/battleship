@@ -151,4 +151,24 @@ test('check checkIfMoveLegal: legal move', () => {
     const expected = true;
     expect(player1.checkIfMoveLegal('b2')).toBe(expected);
 });
-
+test('check checkIfMoveLegal: legal move', () => {
+    const player1 = CreatePlayer("human");
+    player1.shotPositions = ['a1', 'a2', 'a3'];
+    const expected = true;
+    expect(player1.checkIfMoveLegal('b2')).toBe(expected);
+});
+test('check computerShooting moves yield nr up to 64', () => {
+    const player1 = CreatePlayer("computer");
+    const expected = 65;
+    expect(parseInt(player1.computerShooting())).toBeLessThan(expected);
+});
+test('check computerShooting moves yield nr greater than 0', () => {
+    const player1 = CreatePlayer("computer");
+    const expected = 0;
+    expect(parseInt(player1.computerShooting())).toBeGreaterThan(expected);
+});
+test('check computerShooting moves are legal', () => {
+    const player1 = CreatePlayer("computer");
+    player1.shotPositions = ['30', '50'];
+    expect(player1.computerShooting('b2')).not.toBe(player1.shotPositions[0] || player1.shotPositions[1]);
+});

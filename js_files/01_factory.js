@@ -28,7 +28,7 @@ function CreateShip(length) {
 function GameboardFactory() {
     return {
         boardReady: false, //checks if all ships have been placed
-        ships: [CreateShip(3), CreateShip(2)],
+        ships: [CreateShip(2), CreateShip(3), CreateShip(4), CreateShip(4)],
         missedAttacks: [],
         shipsSunken: 0,
 
@@ -88,7 +88,7 @@ function CreatePlayer(type) {
             while (this.shotPositions.includes(randomCoord)) {
                 randomCoord = generateRandomCoord();
             }
-            return randomCoord;
+            return randomCoord.toString();
 
         }
     }

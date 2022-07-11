@@ -146,8 +146,9 @@ background-color: rgb(255, 0, 98);
     width: 50px; */
     border: 1px solid var(--cNavyBlue);
     display: flex;
-        align-items: center;
-        justify-content: center;
+    align-items: center;
+    justify-content: center;
+        
 }
 
 /* Coord hit */
@@ -162,18 +163,147 @@ background-color: rgb(255, 0, 98);
 }
 
 /* Ships to be positioned */
-.ship-element-1{
-    width: 50px;
-    height: 50px;
-    background-color: aqua;
+.ship-container{
+    display: flex;
+    flex-direction: column;
+    gap: var(--marginSmall);
 }
-.ship-element-2 {
-    width: 100px;
-    height: 50px;
-    background-color: red;
+.ship-sub-container{
+    display: flex;
+    align-items: center;
+    gap: var(--marginSmall);
 }
-.ship-element-not-positioned{
+.rotate-ship-icon{
+    font-size: 30px;
+    cursor:pointer;
+    color: var(--cNavyBlue);
+}
+.rotate-ship-icon:hover{
+color: var(--cBeige);
+}
+.the-ship{
+    display: flex;
+}
+.the-ship-vertical{
+/* transform:rotate(90deg);
+transform-origin: bottom right; */
+flex-direction: column;
+}
+.ship-part{
+    width: 48px;
+    height: 48px;
+    /* background-color: rgb(0, 255, 255); */
+}
+.the-ship-vertical .ship-part{
+    transform:rotate(90deg);
+    transform-origin: center;
+}
+.ship-not-positioned{
     cursor:grab;
+}
+/* .ship-sub-container-0 .ship-part-1{
+    
+background: url('./images/ship_1.png') no-repeat center bottom/cover;
+background-position: left;
+}
+.ship-sub-container-0 .ship-part-2 {
+    background-color: var(--cNavyBlue);
+    background: url('./images/ship_1.png') no-repeat center bottom/cover;
+        background-position: right;
+        background-color: var(--cNavyBlue);
+    /* background: url('images/navalShip_3.png') no-repeat center bottom/cover; */
+/* } */ 
+.coords-on-drag{
+    background-color: var(--cBeige);
+}
+
+/* Individual ship styling */
+.ship-1-part-1{
+    background: url('./images/ship_1.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-1-part-2 {
+    background: url('./images/ship_1.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-1-part-1.ship-part-vertical, .ship-1-part-2.ship-part-vertical{
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+.ship-2-part-1 {
+    background: url('./images/ship_2.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-2-part-2 {
+    background: url('./images/ship_2.png') no-repeat center bottom/cover;
+    background-position: center;
+}
+.ship-2-part-3 {
+    background: url('./images/ship_2.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+
+.ship-2-part-1.ship-part-vertical,
+.ship-2-part-2.ship-part-vertical,
+.ship-2-part-3.ship-part-vertical {
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+.ship-3-part-1 {
+    background: url('./images/ship_3_a.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-3-part-2 {
+    background: url('./images/ship_3_a.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-3-part-3 {
+    background: url('./images/ship_3_b.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-3-part-4 {background: url('./images/ship_3_b.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-3-part-1.ship-part-vertical,
+.ship-3-part-2.ship-part-vertical,
+.ship-3-part-3.ship-part-vertical,
+.ship-3-part-4.ship-part-vertical {
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+.ship-4-part-1 {
+    background: url('./images/ship_4_a.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+
+.ship-4-part-2 {
+    background: url('./images/ship_4_a.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+
+.ship-4-part-3 {
+    background: url('./images/ship_4_b.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+
+.ship-4-part-4 {
+    background: url('./images/ship_4_b.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+
+.ship-4-part-1.ship-part-vertical,
+.ship-4-part-2.ship-part-vertical,
+.ship-4-part-3.ship-part-vertical,
+.ship-4-part-4.ship-part-vertical {
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+/* hide items */
+.hide{
+    display:none;
 }
 
 /* ****** FOOTER ****** */

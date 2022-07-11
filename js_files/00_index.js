@@ -42,18 +42,6 @@ gameTypeHHBtn.addEventListener('click', () => { changeGameType(gameTypeHHBtn) })
 //if game started, ships are no longer draggable
 let gameStarted = false;
 
-//draggable items (ships)
-let p1Ships = document.querySelectorAll('.p1Ship');
-let p2Ships = document.querySelectorAll('.p2Ship'); //length of 0 means nothing
-
-
-//board coords which may have elements dragged into:
-let p1Coords = document.querySelectorAll('.p1DropContainer');
-let p2Coords = document.querySelectorAll('.p1DropContainer');
-
-function checkIfDropContainerHasChild() {
-
-}
 
 
 

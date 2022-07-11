@@ -21,19 +21,40 @@ const DisplayBoard = (function () {
 
         playerContainer.append(namePlayer, board)
 
-        function createDraggableShips(shipLength) {
+        function createDraggableShips(shipLength, shipNr) {
             let ship = document.createElement('div');
             ship.setAttribute("draggable", "true"); //take this out when game starts
-            ship.setAttribute("class", `ship-element-${shipLength}`);
+            ship.setAttribute("class", `the-ship`);
+            ship.classList.add(`theShip`); //take this out when game starts
             ship.classList.add(`${boardId}Ship`); //take this out when game starts
-            ship.classList.add("ship-element-not-positioned"); //take this out when game starts
+            ship.classList.add("ship-not-positioned"); //take this out when game starts
+
+
+            for (let i = 1; i < (parseInt(shipLength) + 1); i++) {
+                let shipPart = document.createElement('div');
+                shipPart = document.createElement('div');
+                shipPart.classList.add('ship-part');
+                shipPart.classList.add(`${shipNr}-part-${i}`);
+                ship.appendChild(shipPart);
+            }
             return ship;
         }
         if ((playerName === "Human") || (playerName === "Player 1") || (playerName === "Player 2")) {
             let shipContainer = document.createElement('div');
             shipContainer.setAttribute("class", "ship-container");
-            let ships = [createDraggableShips("1"), createDraggableShips("2")]
-            shipContainer.append(ships[0], ships[1]);
+
+            let ships = [createDraggableShips("2", "ship-1"), createDraggableShips("3", "ship-2"), createDraggableShips("4", "ship-3"), createDraggableShips("4", "ship-4")]
+            for (let i = 0; i < ships.length; i++) {
+                let shipSubContainer = document.createElement('div');
+                shipSubContainer.classList.add('ship-sub-container');
+                shipSubContainer.classList.add(`ship-sub-container-${i}`)
+                let rotateIcon = document.createElement('ion-icon');
+                rotateIcon.setAttribute('name', 'sync');
+                rotateIcon.classList.add('rotate-ship-icon');
+                rotateIcon.classList.add('rotateShipIcon');
+                shipSubContainer.append(ships[i], rotateIcon);
+                shipContainer.append(shipSubContainer);
+            }
             playerContainer.append(shipContainer);
         }
 
@@ -50,12 +71,7 @@ const DisplayBoard = (function () {
         createBoard,
         resetBoard
     }
-
 })();
-
-
-
-
 
 export {
     DisplayBoard,

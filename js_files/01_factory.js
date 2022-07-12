@@ -1,7 +1,7 @@
 //factory function: making ships
 function CreateShip(length) {
     return {
-        shipLength: length, ///ver re realmente necessario
+        shipLength: length,
         shipPosition: [],
         hitSpots: [],
         hasSunken: false,
@@ -33,7 +33,7 @@ function GameboardFactory() {
         shipsSunken: 0,
 
         checkIfAllShipsPositioned() {
-            let shipPlacement = [this.ships[0].shipPosition, this.ships[1].shipPosition];
+            let shipPlacement = [this.ships[0].shipPosition, this.ships[1].shipPosition, this.ships[2].shipPosition, this.ships[3].shipPosition];
             shipPlacement.some(e => {
                 e.length === 0 ? this.boardReady = false : this.boardReady = true;
             });

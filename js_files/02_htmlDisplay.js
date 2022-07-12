@@ -24,6 +24,7 @@ const DisplayBoard = (function () {
         function createDraggableShips(shipLength, shipNr) {
             let ship = document.createElement('div');
             ship.setAttribute("draggable", "true"); //take this out when game starts
+            ship.setAttribute(`data-ship`, `${shipNr}`)
             ship.setAttribute("class", `the-ship`);
             ship.classList.add(`theShip`); //take this out when game starts
             ship.classList.add(`${boardId}Ship`); //take this out when game starts
@@ -34,7 +35,7 @@ const DisplayBoard = (function () {
                 let shipPart = document.createElement('div');
                 shipPart = document.createElement('div');
                 shipPart.classList.add('ship-part');
-                shipPart.classList.add(`${shipNr}-part-${i}`);
+                shipPart.classList.add(`ship-${shipNr}-part-${i}`);
                 ship.appendChild(shipPart);
             }
             return ship;
@@ -43,7 +44,7 @@ const DisplayBoard = (function () {
             let shipContainer = document.createElement('div');
             shipContainer.setAttribute("class", "ship-container");
 
-            let ships = [createDraggableShips("2", "ship-1"), createDraggableShips("3", "ship-2"), createDraggableShips("4", "ship-3"), createDraggableShips("4", "ship-4")]
+            let ships = [createDraggableShips("2", "1"), createDraggableShips("3", "2"), createDraggableShips("4", "3"), createDraggableShips("4", "4")]
             for (let i = 0; i < ships.length; i++) {
                 let shipSubContainer = document.createElement('div');
                 shipSubContainer.classList.add('ship-sub-container');
@@ -66,6 +67,10 @@ const DisplayBoard = (function () {
             boardsContainer.removeChild(boardsContainer.firstChild)
         }
     }
+
+    //drawing initial board
+    createBoard("p1", "Human");
+    createBoard("p2", "Computer");
 
     return {
         createBoard,

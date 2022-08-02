@@ -128,6 +128,7 @@ body{
 
 /* Boards */
 .boards-container{
+    margin-top: var(--marginSmall);
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -321,6 +322,13 @@ background-position: left;
 .ship-4-part-4.ship-part-vertical {
     transform: rotate(90deg);
     transform-origin: center;
+}
+
+/* cursor target */
+/* Source: "https://www.flaticon.com/free-icons/target" Target icon created by Pixel perfect - Flaticon */
+.cursorTarget{
+    cursor: url('./images/iconTarget.png') 16 16, auto;
+    
 }
 /* hide items */
 .hide{

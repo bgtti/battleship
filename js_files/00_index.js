@@ -21,6 +21,7 @@ function gameIsHC() {
     DisplayBoard.createBoard("p1", "Human");
     DisplayBoard.createBoard("p2", "Computer");
     Game.initiateGame("Human", "Computer");
+    Game.resettingHTMLElements();
     hidingCoords("p2");
     PositioningShips.activatingDragDropELs()
 };
@@ -30,6 +31,7 @@ function gameIsHH() {
     DisplayBoard.createBoard("p1", "Player 1");
     DisplayBoard.createBoard("p2", "Player 2");
     Game.initiateGame("Human", "Human");
+    Game.resettingHTMLElements();
     PositioningShips.activatingDragDropELs()
 }
 

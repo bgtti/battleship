@@ -18,7 +18,7 @@ describe('initiation: startGame, setShipPosition', () => {
     // const mockCreateShip = jest.spyOn(moduleFactories, 'CreateShip');
 
     test('startGame should call CreatePlayer factory', () => {
-        Game.startGame("Human", "Computer");
+        Game.initiateGame("Human", "Computer");
         expect(mockCreatePlayerRequest).toHaveBeenCalledWith("Human");
         expect(mockCreatePlayerRequest).toHaveBeenCalledWith("Computer");
         expect(mockCreatePlayerRequest).toHaveBeenCalledTimes(2);

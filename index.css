@@ -5,8 +5,11 @@
     --paddingBtns: 5px 10px;
     --borderRadius: 10%;
     --cNavyBlue: #1f2b44;
+    --cOpaqueNavyBlue: #1f2b441c;
     --cBeige: #b5875e;
+    --cOpaqueBeige: #b5875e10;
     --cRed: #811c2c;
+    --cGrey: rgb(126, 126, 133);
     --cNavyBlueFilter: invert(16%) sepia(9%) saturate(2787%) hue-rotate(183deg) brightness(92%) contrast(95%);
     --cBeigeFilter: invert(54%) sepia(39%) saturate(459%) hue-rotate(347deg) brightness(98%) contrast(84%);
 }
@@ -109,6 +112,18 @@ body{
     background-color: var(--cNavyBlue);
     border: 2px solid var(--cNavyBlue);
     color: var(--cBeige);
+    cursor: pointer;
+}
+.start-game-btn-not-ready{
+    border: 2px solid var(--cOpaqueNavyBlue);
+        background-color: var(--cOpaqueBeige);
+        color: var(--cOpaqueNavyBlue) ;
+}
+.start-game-btn-not-ready:hover {
+    border: 2px solid var(--cOpaqueNavyBlue);
+    background-color: var(--cOpaqueBeige);
+    color: var(--cOpaqueNavyBlue);
+    cursor: default;
 }
 
 /* Boards */
@@ -149,8 +164,9 @@ background-color: rgb(255, 0, 98);
     display: flex;
     align-items: center;
     justify-content: center;
-    
-        
+}
+.hidden-coord{
+    background-color: var(--cGrey);
 }
 
 /* Coord hit */

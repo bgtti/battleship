@@ -68,9 +68,9 @@ const DisplayBoard = (function () {
         }
     }
 
-    //drawing initial board
-    createBoard("p1", "Human");
-    createBoard("p2", "Computer");
+    //drawing initial board currently in index.js
+    // createBoard("p1", "Human");
+    // createBoard("p2", "Computer");
 
     return {
         createBoard,

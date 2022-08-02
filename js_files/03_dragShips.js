@@ -15,8 +15,8 @@ export let PositioningShips = (function () {
     let rotatingIcons = document.querySelectorAll('.rotateShipIcon');
 
     //ship positions
-    let p1shipPosition = [];
-    let p2shipPosition = [];
+    const p1shipPosition = [];
+    const p2shipPosition = [];
 
     //Callback functions for event listeners:
 
@@ -43,6 +43,15 @@ export let PositioningShips = (function () {
             }
         })
     }
+
+    //check if all ships were positioned (to enable start game button click):
+    //***********only for H vc C
+    function checkIfAllShipsPositioned(player) { //accepts "p1" or "p2"
+        if (player === "p1" && p1shipPosition.length === 4) { //(player === "p1" && p1shipPosition.length === 4) || (player === "p2" && p2shipPosition.length === 4))
+            let gameStartBtn = document.querySelector(".startGameBtn");
+            gameStartBtn.classList.remove('start-game-btn-not-ready');
+        }
+    };
 
     //Remove class of element being dragged on drop or when another ship is selected 
     function clearDraggingClass(playerShips) { ///argument should be: p1Ships or p2Ships
@@ -117,7 +126,7 @@ export let PositioningShips = (function () {
         let shipDragged = document.querySelector('.shipOnDrag');
         let lengthOfShip = shipDragged.childElementCount;
 
-        let dropSpot = [shipDragged.dataset.ship, []];
+        const dropSpot = [shipDragged.dataset.ship, []];
 
         let targettedCoord;
         player === "p1" ? targettedCoord = parseInt(coord.dataset.p1) : targettedCoord = parseInt(coord.dataset.p2)
@@ -155,13 +164,19 @@ export let PositioningShips = (function () {
             }
         }
         player === "p1" ? p1shipPosition.push(dropSpot) : p2shipPosition.push(dropSpot);
+        player === "p1" ? checkIfAllShipsPositioned("p1") : checkIfAllShipsPositioned("p2");
         removeRotateIcons();
         clearDraggingClass(playerShips);
+
     };
 
     function activatingDragDropELs() {
-        p1shipPosition = [];
-        p2shipPosition = [];
+        while (p1shipPosition.length > 0) {
+            p1shipPosition.pop();
+        };
+        while (p2shipPosition.length > 0) {
+            p2shipPosition.pop();
+        };
         p1Ships = document.querySelectorAll('.p1Ship');
         p2Ships = document.querySelectorAll('.p2Ship');
         p1Coords = document.querySelectorAll('.p1DropContainer');

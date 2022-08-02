@@ -1,13 +1,17 @@
 import { PositioningShips } from "./03_dragShips.js";
 import { CreatePlayer } from "./01_factory.js";
-export const Game = (function () {
+const Game = (function () {
     //check if all ships are positioned to allow the game to start
 
-    //check factory.js: checkIfAllShipsPositioned (Boards)
+    //check factory.js: checkIfAllShipsPositioned (Boards) CURRENTLY NOT USING
     function checkIfGamePossible(gameType) {//game type: "HC" or "HH"
         let p1coords = PositioningShips.p1shipPosition;
-        let p2coords;
-        gameType === "HH" ? p2coords = PositioningShips.p2shipPosition : p2ShipCoords = [];///NEEEEDS COMPUTER COORDS
+        let p2coords; // ******************repetition of setShipPosition
+        if (gameType === "HH") {
+            p2coords = PositioningShips.p2shipPosition;
+        } else {
+            player2.playersBoard.positionComputerShips();
+        }
 
         if ((p1coords.length === 4) && (p2coords === 4)) {
             return true
@@ -18,7 +22,7 @@ export const Game = (function () {
     let player1;
     let player2;
 
-    function startGame(player1Type, player2Type) { //player types: "Human" or "Computer"
+    function initiateGame(player1Type, player2Type) { //player types: "Human" or "Computer"
         player1 = CreatePlayer(player1Type);
         player2 = CreatePlayer(player2Type);
     };
@@ -31,12 +35,15 @@ export const Game = (function () {
     //setting ship position
     function setShipPosition(gameType) { //game type: "HC" or "HH"
         let p1ShipCoords = sortShips(PositioningShips.p1shipPosition);
-        console.log(p1ShipCoords[0][1]);
         let p2ShipCoords;
-        gameType === "HH" ? p2ShipCoords = sortShips(PositioningShips.p2shipPosition) : p2ShipCoords = [];///NEEEEDS COMPUTER COORDS
+        if (gameType === "HH") {
+            p2ShipCoords = sortShips(PositioningShips.p2shipPosition);
+        } else {
+            player2.playersBoard.positionComputerShips();
+        }
 
         function putPositionInShip(player, coords) { //args: (player1, p1ShipCoords) or (player2, p2ShipCoords)
-            player.playersBoard.ships[(parseInt(coords[0][0]) - 1)].setPosition(coords[0][1]); //2
+            player.playersBoard.ships[(parseInt(coords[0][0]) - 1)].setPosition(coords[0][1]);//2
             player.playersBoard.ships[(parseInt(coords[1][0]) - 1)].setPosition(coords[1][1]);//3
             player.playersBoard.ships[(parseInt(coords[2][0]) - 1)].setPosition(coords[2][1]);//4
             player.playersBoard.ships[(parseInt(coords[3][0]) - 1)].setPosition(coords[3][1]);//4
@@ -45,6 +52,15 @@ export const Game = (function () {
         if (gameType === "HH") {
             putPositionInShip(player2, p2ShipCoords);
         }
+    }
+
+    // starting the game
+    function startGame() {
+        let gameStartBtn = document.querySelector(".startGameBtn");
+        if (!gameStartBtn.classList.contains('start-game-btn-not-ready')) {
+            setShipPosition("HC") //// **** only working for HC
+        }
+        //player1's turn.... **************************
     }
 
     //getting all coors from board
@@ -97,8 +113,9 @@ export const Game = (function () {
     }
 
     return {
-        startGame,
+        initiateGame,
         checkIfGamePossible,
+        startGame,
 
         //for testing only:
         player1,
@@ -107,3 +124,5 @@ export const Game = (function () {
         setShipPosition,
     }
 })()
+
+export { Game }

@@ -49,6 +49,32 @@ test('tests isSunk method: sunk true', () => {
     const expected = true;
     expect(ship1.hasSunken).toBe(expected);
 });
+test('check computerShipCoordGenerator to produce horizontal position', () => {
+    const ship1 = CreateShip(3);
+    const expected = [3, 4, 5];
+    expect(ship1.computerShipCoordGenerator(3, 2)).toEqual(expect.arrayContaining(expected));
+});
+test('check computerShipCoordGenerator to produce horizontal position 2', () => {
+    const ship1 = CreateShip(3);
+    const expected = [53, 54, 55];
+    expect(ship1.computerShipCoordGenerator(55, 2)).toEqual(expect.arrayContaining(expected));
+});
+test('check computerShipCoordGenerator to produce vertical position', () => {
+    const ship1 = CreateShip(4);
+    const expected = [37, 45, 53, 61];
+    expect(ship1.computerShipCoordGenerator(61, 1)).toEqual(expect.arrayContaining(expected));
+});
+test('check computerShipCoordGenerator to produce vertical position 2', () => {
+    const ship1 = CreateShip(2);
+    const expected = [7, 15];
+    expect(ship1.computerShipCoordGenerator(7, 1)).toEqual(expect.arrayContaining(expected));
+});
+test('check computerShipPositioning', () => {
+    const ship1 = CreateShip(3);
+    ship1.computerShipPositioning()
+    const expected = 3;
+    expect(ship1.shipPosition.length).toBe(expected);
+});
 
 
 //gameboard
@@ -157,6 +183,38 @@ test('check allShipsSunken method: all ships sunken true', () => {
     const expected = true;
     expect(board1.allShipsSunken()).toBe(expected);
 });
+test('checkIfCoordInArrayOfCoords returns true', () => {
+    const board1 = GameboardFactory();
+    let arr1 = [[1, 2], [3, 4, 5], [6, 7, 8, 9]];
+    let arr2 = [20, 8];
+    let arr3 = [6, 88];
+    let arr4 = [4, 9];
+    let arr5 = [[5, 6]];
+    const expected = true;
+    expect(board1.checkIfCoordInArrayOfCoords(arr2, arr1)).toEqual(expected);
+    expect(board1.checkIfCoordInArrayOfCoords(arr3, arr1)).toEqual(expected);
+    expect(board1.checkIfCoordInArrayOfCoords(arr4, arr1)).toEqual(expected);
+    expect(board1.checkIfCoordInArrayOfCoords(arr3, arr5)).toEqual(expected);
+});
+test('checkIfCoordInArrayOfCoords returns false', () => {
+    const board1 = GameboardFactory();
+    let arr1 = [[1, 2], [3, 4, 5], [6, 7, 8, 9]];
+    let arr2 = [49, 50];
+    let arr3 = [16, 22];
+    let arr4 = [[1, 2]];
+    const expected = false;
+    expect(board1.checkIfCoordInArrayOfCoords(arr2, arr1)).toEqual(expected);
+    expect(board1.checkIfCoordInArrayOfCoords(arr3, arr1)).toEqual(expected);
+    expect(board1.checkIfCoordInArrayOfCoords(arr3, arr4)).toEqual(expected);
+});
+test('positionComputerShips positions ships and sets board as ready', () => {
+    const board1 = GameboardFactory();
+    board1.positionComputerShips();
+    const expected = true;
+    const expected2 = 4;
+    expect(board1.boardReady).toEqual(expected);
+    expect(board1.ships[3].shipPosition.length).toEqual(expected2);
+});
 
 //Player
 test('check checkIfMoveLegal: illegal move', () => {
@@ -187,8 +245,4 @@ test('check computerShooting moves yield nr greater than 0', () => {
     const expected = 0;
     expect(parseInt(player1.computerShooting())).toBeGreaterThan(expected);
 });
-// test('check computerShooting moves are legal', () => {
-//     const player1 = CreatePlayer("computer");
-//     player1.shotPositions = ['30', '50'];
-//     expect(player1.computerShooting('b2')).not.toBe(player1.shotPositions[0] || player1.shotPositions[1]);
-// });
+

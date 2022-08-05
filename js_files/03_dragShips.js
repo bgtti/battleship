@@ -18,6 +18,10 @@ export let PositioningShips = (function () {
     const p1shipPosition = [];
     const p2shipPosition = [];
 
+    //parts of ship dropped
+    const p1shipParts = [];
+    const p2shipParts = [];
+
     //Callback functions for event listeners:
 
     //rotate icon to set ship in vertical position
@@ -127,6 +131,7 @@ export let PositioningShips = (function () {
         let lengthOfShip = shipDragged.childElementCount;
 
         const dropSpot = [shipDragged.dataset.ship, []];
+        const droppedParts = [shipDragged.dataset.ship, []];
 
         let targettedCoord;
         player === "p1" ? targettedCoord = parseInt(coord.dataset.p1) : targettedCoord = parseInt(coord.dataset.p2)
@@ -144,7 +149,8 @@ export let PositioningShips = (function () {
                     let coordOfPart = String((targettedCoord + (8 * i)));
                     let partContainer = document.querySelector(`[data-${player}="${coordOfPart}"]`);
                     partContainer.appendChild(shipPart);
-                    dropSpot[1].push(coordOfPart);
+                    dropSpot[1].push(parseInt(coordOfPart));
+                    droppedParts[1].push(shipPart);
                 }
             }
         } else {
@@ -159,11 +165,13 @@ export let PositioningShips = (function () {
                     let coordOfPart = String((targettedCoord + i));
                     let partContainer = document.querySelector(`[data-${player}="${coordOfPart}"]`);
                     partContainer.appendChild(shipPart);
-                    dropSpot[1].push(coordOfPart);
+                    dropSpot[1].push(parseInt(coordOfPart));
+                    droppedParts[1].push(shipPart)
                 }
             }
         }
         player === "p1" ? p1shipPosition.push(dropSpot) : p2shipPosition.push(dropSpot);
+        player === "p1" ? p1shipParts.push(droppedParts) : p2shipParts.push(droppedParts);
         player === "p1" ? checkIfAllShipsPositioned("p1") : checkIfAllShipsPositioned("p2");
         removeRotateIcons();
         clearDraggingClass(playerShips);
@@ -216,6 +224,8 @@ export let PositioningShips = (function () {
     return {
         activatingDragDropELs,
         p1shipPosition,
-        p2shipPosition
+        p2shipPosition,
+        p1shipParts,
+        p2shipParts,
     }
 })()

@@ -3,8 +3,10 @@ function CreateShip(length) {
     return {
         shipLength: length,
         shipPosition: [],
+        shipDirection: "not set", //only used for computer generated ships
         hitSpots: [],
         hasSunken: false,
+        shipParts: [],
         setPosition(coords) {
             if (coords.length == this.shipLength) { this.shipPosition = coords };
         },
@@ -45,7 +47,7 @@ function CreateShip(length) {
                         coordinates.unshift(previousCoord);
                     }
                 }
-            } else if (verticalOrHorizontal === 2) {//if horizontal *** not finished
+            } else if (verticalOrHorizontal === 2) {//if horizontal 
                 let limitCoord = [];
 
                 for (let i = 1; i <= 8; i++) {
@@ -80,7 +82,9 @@ function CreateShip(length) {
             let randomPosition = this.generateRandomCoord();
             let verticalOrHorizontal = this.generateRandomDirection();
             this.shipPosition = this.computerShipCoordGenerator(randomPosition, verticalOrHorizontal);
+            verticalOrHorizontal === 1 ? this.shipDirection = "vertical" : this.shipDirection = "horizontal";
         }
+
     }
 };
 
@@ -99,43 +103,46 @@ function GameboardFactory() {
                 e.length === 0 ? this.boardReady = false : this.boardReady = true;
             });
         },
-        checkIfCoordInArrayOfCoords(singleArray, arrayOfArrays) { //check if elements in singleArray are present in any array in arrayOfArrays
+        checkIfCoordInArrayOfCoords(givenCoords, allCoords) { //check if elements in givenCoords are present in allCoords array
             let arrayIncludesElement = false;
-            for (let arr of arrayOfArrays) {
-                if (singleArray.some(element => arr.includes(element))) {
-                    arrayIncludesElement = true;
-                }
+            if (givenCoords.some(element => allCoords.includes(element))) {
+                return true;
             }
             return arrayIncludesElement;
 
         },
         positionComputerShips() {
             this.ships[0].computerShipPositioning();
-            let allPositions = [[this.ships[0].computerShipPositioning()]];
+            let allPositions = [...this.ships[0].shipPosition];
 
-            for (let i = 1; i < 4; i++) {
-                this.ships[i].computerShipPositioning();
-                let shipCoords = this.ships[i].shipPosition;
-                let coordRepeted = this.checkIfCoordInArrayOfCoords(shipCoords, allPositions);
+            let counter = 1;
+            let coordRepeted;
 
-                while (coordRepeted === true) {
-                    this.ships[i].computerShipPositioning();
-                    shipCoords = this.ships[i].shipPosition;
-                    coordRepeted = this.checkIfCoordInArrayOfCoords(shipCoords, allPositions);
+            while (counter < 4) {
+                this.ships[counter].computerShipPositioning();
+                let shipCoords = this.ships[counter].shipPosition;
+                coordRepeted = this.checkIfCoordInArrayOfCoords(shipCoords, allPositions);
+                if (coordRepeted === false) {
+                    counter++;
+                    allPositions.push(...shipCoords);
+                    if (counter === 3) {
+                        this.boardReady = true; //using?
+                    }
                 }
-                allPositions.push(shipCoords);
             }
-            this.boardReady = true;
         },
-        receiveAttack(coord) {
+        receiveAttack(coordReceived) {
+            let coord = parseInt(coordReceived);
             let missed = true;
             let shipAttacked = false;
+            let shipSunk = false;
             for (let ship of this.ships) {
                 if (ship.shipPosition.includes(coord)) {
                     missed = false;
                     shipAttacked = true;
                     ship.hit(coord);
                     if (ship.hasSunken === true) {
+                        shipSunk = true;
                         this.shipsSunken++;
                     }
                 }
@@ -143,7 +150,7 @@ function GameboardFactory() {
             if (missed === true) {
                 this.missedAttacks.push(coord)
             }
-            return shipAttacked
+            return [shipAttacked, shipSunk]
         },
         allShipsSunken() {
             if (this.ships.length === this.shipsSunken) {
@@ -178,7 +185,10 @@ function CreatePlayer(type) {
             while (this.shotPositions.includes(randomCoord)) {
                 randomCoord = generateRandomCoord();
             }
-            return randomCoord.toString();
+            if (!this.shotPositions.includes(randomCoord)) {
+                this.shotPositions.push(randomCoord)
+                return randomCoord.toString();
+            }
         },
     }
 
@@ -191,20 +201,3 @@ export {
     GameboardFactory,
     CreatePlayer
 }
-
-
-// let arr1 = [[1, 2], [3, 4, 5], [6, 7, 8, 9]];
-// let arr2 = [20, 88];
-// let arrIncludes = false;
-// for (let arr of arr1) {
-//     if (arr2.some(element => arr.includes(element))) {
-//         arrIncludes = true;
-//     }
-
-// }
-// console.log(arrIncludes)
-
-
-// arr1.forEach(arr => arr2.some(element => arr.includes(element)));
-
-// arr2.some(element => arr1.forEach(position => position.includes(element)));

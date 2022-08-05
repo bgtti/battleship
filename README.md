@@ -23,7 +23,7 @@ takes the ship position from dragShips and creates players, board, and ships usi
 Step-by-step:
 Game type: Human vs Computer ("HC"), default
 
-1. index.js will use the function gameIsHC() to call htmlDisplay.js to create 2 boards, and dragShips.js to enable ship drag and drop. It also calls game.js' startGame function which calls factory.js to create the player objects.
+1. index.js will use the function gameIsHC() to call htmlDisplay.js to create 2 boards, and dragShips.js to enable ship drag and drop. It also calls game.js' initiateGame function which calls factory.js to create the player objects.
 
 2. When Human positions all his/her ships, dragShips.js will enable the 'start game' button to be clicked using checkIfAllShipsPositioned, which is called at every ship drop on the board. dragShips.js stores ships by number (1-4), and the dropped coordinate of each.
 

@@ -24,17 +24,25 @@ export let explosionAnimation = (function () {
         return new Promise(resolve => {
             setTimeout(() => {
                 previousImage.classList.add("hide");
-                newImage.classList.remove("hide");
+                if (newImage) {
+                    newImage.classList.remove("hide");
+                }
                 resolve();
-            }, 90)
+            }, 1500)
         })
     }
 
-    function playAnimation(targetCoord) {
+    function playAnimation(targetCoord, hitSuccess) {
         let imageContainer = document.createElement('div');
         imageContainer.append(image1, image2, image3, image4, image5);
         image1.classList.remove("hide");
         targetCoord.append(imageContainer);
+
+        let hitSpotIcon = document.createElement('ion-icon');
+        hitSpotIcon.setAttribute("name", "close");
+        let hitAttribute;
+        hitSuccess === true ? hitAttribute = "spot-hit-green" : hitAttribute = "spot-hit-red"
+        hitSpotIcon.setAttribute("class", `${hitAttribute}`);
 
         showImage(image1, image2).then(() => {
             return showImage(image2, image3);
@@ -43,8 +51,12 @@ export let explosionAnimation = (function () {
         }).then(() => {
             return showImage(image4, image5);
         }).then(() => {
+            return showImage(image5);
+        }).then(() => {
             image5.classList.add("hide");
+            imageContainer.append(hitSpotIcon)
         })
+
     }
 
     return {

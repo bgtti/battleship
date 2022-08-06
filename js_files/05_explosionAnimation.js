@@ -28,11 +28,11 @@ export let explosionAnimation = (function () {
                     newImage.classList.remove("hide");
                 }
                 resolve();
-            }, 1500)
+            }, 150)
         })
     }
 
-    function playAnimation(targetCoord, hitSuccess) {
+    function playAnimation(targetCoord, hitSuccess, shipParts) {
         let imageContainer = document.createElement('div');
         imageContainer.append(image1, image2, image3, image4, image5);
         image1.classList.remove("hide");
@@ -41,8 +41,9 @@ export let explosionAnimation = (function () {
         let hitSpotIcon = document.createElement('ion-icon');
         hitSpotIcon.setAttribute("name", "close");
         let hitAttribute;
-        hitSuccess === true ? hitAttribute = "spot-hit-green" : hitAttribute = "spot-hit-red"
+        hitSuccess === true ? hitAttribute = "spot-hit-red" : hitAttribute = "spot-hit-blue";
         hitSpotIcon.setAttribute("class", `${hitAttribute}`);
+        hitSpotIcon.classList.add("spotWasHit");
 
         showImage(image1, image2).then(() => {
             return showImage(image2, image3);
@@ -53,8 +54,27 @@ export let explosionAnimation = (function () {
         }).then(() => {
             return showImage(image5);
         }).then(() => {
-            image5.classList.add("hide");
-            imageContainer.append(hitSpotIcon)
+            setTimeout(() => {
+                imageContainer.append(hitSpotIcon);
+            }, 150);
+        }).then(() => {
+            setTimeout(() => {
+                if (shipParts !== false) {
+                    const shipPartParents = [];
+                    shipParts.forEach(part => {
+                        shipPartParents.push(part.parentElement);
+                        part.classList.add("ship-part-sunk");
+                        part.classList.remove("hide");
+                    })
+                    shipPartParents.forEach(parent => {
+                        if (parent.querySelector(".spotWasHit") !== null) {
+                            parent.querySelector(".spotWasHit").classList.add("hide");
+                        }
+                        // parent.classList.remove("hidden-coord");
+                    })
+                }
+            }, 150);
+
         })
 
     }

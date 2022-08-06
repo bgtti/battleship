@@ -22,7 +22,7 @@ function gameIsHC() {
     DisplayBoard.createBoard("p2", "Computer");
     Game.initiateGame("Human", "Computer");
     Game.resettingHTMLElements();
-    // hidingCoords("p2");
+    hidingCoords("p2");
     PositioningShips.activatingDragDropELs()
 };
 function gameIsHH() {

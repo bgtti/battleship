@@ -132,16 +132,21 @@ describe("GameboardFactory: checkIfCoordInArrayOfCoords method", () => {
 });
 
 describe("GameboardFactory: positionComputerShips", () => {
-    const board1 = GameboardFactory();
-    board1.positionComputerShips()
-    expect(board1.ships[0].shipPosition.length).toBe(2);
-    expect(board1.ships[1].shipPosition.length).toBe(3);
-    expect(board1.ships[2].shipPosition.length).toBe(4);
-    expect(board1.ships[3].shipPosition.length).toBe(4);
+    test('positionComputerShips positions ships and sets board as ready', () => {
+        const board1 = GameboardFactory();
+        board1.positionComputerShips()
+        const expected = true;
+        expect(board1.ships[0].shipPosition.length).toBe(2);
+        expect(board1.ships[1].shipPosition.length).toBe(3);
+        expect(board1.ships[2].shipPosition.length).toBe(4);
+        expect(board1.ships[3].shipPosition.length).toBe(4);
+        expect(board1.boardReady).toEqual(expected);
+    });
 });
 
+
 describe("GameboardFactory: receiveAttack method", () => {
-    test('check receiveAttack method: missed', () => {
+    test('receiveAttack method: missed hits', () => {
         const board1 = GameboardFactory();
         board1.ships[0].setPosition([1, 2]);
         board1.ships[1].setPosition([3, 4, 5]);
@@ -153,147 +158,99 @@ describe("GameboardFactory: receiveAttack method", () => {
         const expectedLength = 1;
         const expectedMissed = [21];
         const expectedSunk = 0;
+        const expectedHit = false;
         expect(board1.missedAttacks.length).toBe(expectedLength);
         expect(board1.missedAttacks).toEqual(expect.arrayContaining(expectedMissed));
         expect(board1.shipsSunken).toBe(expectedSunk);
+        expect(board1.receiveAttack(33)[0]).toBe(expectedHit);
+    });
+    test('receiveAttack method: ship hit but not sunken', () => {
+        const board1 = GameboardFactory();
+        board1.ships[0].setPosition([1, 2]);
+        board1.ships[1].setPosition([3, 4, 5]);
+        board1.ships[2].setPosition([9, 10, 11, 12]);
+        board1.ships[3].setPosition([17, 18, 19, 20]);
+        board1.receiveAttack(3);
+        board1.receiveAttack(4);
+        const expectedSunken = 0;
+        const expectedHit = true;
+        const expectedSank = false;
+        expect(board1.shipsSunken).toBe(expectedSunken);
+        expect(board1.receiveAttack(9)[0]).toBe(expectedHit);
+        expect(board1.receiveAttack(9)[1]).toBe(expectedSank);
+    });
+    test('receiveAttack method: ship hit and sunken', () => {
+        const board1 = GameboardFactory();
+        board1.ships[0].setPosition([1, 2]);
+        board1.ships[1].setPosition([3, 4, 5]);
+        board1.ships[2].setPosition([9, 10, 11, 12]);
+        board1.ships[3].setPosition([17, 18, 19, 20]);
+        board1.receiveAttack(2);
+        board1.receiveAttack(1);
+        board1.receiveAttack(3);
+        board1.receiveAttack(4);
+        const expectedSunken = 1;
+        const expectedHit = true;
+        const expectedSank = true;
+        expect(board1.shipsSunken).toBe(expectedSunken);
+        expect(board1.receiveAttack(5)[0]).toBe(expectedHit);
+        expect(board1.receiveAttack(5)[1]).toBe(expectedSank);
+    });
+});
+
+describe("GameboardFactory: allShipsSunken", () => {
+    test('allShipsSunken method: all ships sunken false', () => {
+        const board1 = GameboardFactory();
+        board1.ships[0].setPosition([1, 2]);
+        board1.ships[1].setPosition([3, 4, 5]);
+        board1.ships[2].setPosition([9, 10, 11, 12]);
+        board1.ships[3].setPosition([17, 18, 19, 20]);
+        for (let i = 1; i < 3; i++) { board1.receiveAttack(`${i}`) }
+        for (let i = 3; i < 6; i++) { board1.receiveAttack(`${i}`) }
+        board1.receiveAttack(9);
+        const expected = false;
+        expect(board1.allShipsSunken()).toBe(expected);
+    });
+    test('allShipsSunken method: all ships sunken true', () => {
+        const board1 = GameboardFactory();
+        board1.ships[0].setPosition([1, 2]);
+        board1.ships[1].setPosition([3, 4, 5]);
+        board1.ships[2].setPosition([9, 10, 11, 12]);
+        board1.ships[3].setPosition([17, 18, 19, 20]);
+        for (let i = 1; i < 3; i++) { board1.receiveAttack(`${i}`) }
+        for (let i = 3; i < 6; i++) { board1.receiveAttack(`${i}`) }
+        for (let i = 9; i < 13; i++) { board1.receiveAttack(`${i}`) }
+        for (let i = 17; i < 21; i++) { board1.receiveAttack(`${i}`) }
+        const expected = true;
+        expect(board1.allShipsSunken()).toBe(expected);
+    });
+});
+
+//CreatePlayer
+describe("CreatePlayer: checkIfMoveLegal", () => {
+    test('checkIfMoveLegal: legal and illegal move', () => {
+        const player1 = CreatePlayer("human");
+        player1.shotPositions = [9, 10, 11, 12];
+        player1.checkIfMoveLegal(13)
+        const expected = false;
+        const expected2 = true;
+        const expected3 = [9, 10, 11, 12, 13];
+        expect(player1.shotPositions).toEqual(expect.arrayContaining(expected3));
+        expect(player1.checkIfMoveLegal(9)).toBe(expected);
+        expect(player1.checkIfMoveLegal(14)).toBe(expected2);
+    });
+});
+
+describe("CreatePlayer: computerShooting", () => {
+    test('computerShooting moves yield nr from 0 to 64', () => {
+        const player1 = CreatePlayer("computer");
+        const expected1 = 65;
+        const expected2 = 0;
+        expect(parseInt(player1.computerShooting())).toBeLessThan(expected1);
+        expect(parseInt(player1.computerShooting())).toBeGreaterThan(expected2);
     });
 });
 
 
-// test('check receiveAttack method: success ship hit', () => {
-//     const board1 = GameboardFactory();
-//     board1.ships[0].setPosition(['1', '2']);
-//     board1.ships[1].setPosition(['3', '4', '5']);
-//     board1.ships[2].setPosition(['9', '10', '11', '12']);
-//     board1.ships[3].setPosition(['17', '18', '19', '20']);
-//     board1.receiveAttack('3');
-//     const expected = 1;
-//     expect(board1.ships[1].hitSpots.length).toBe(expected);
-// });
-// test('check receiveAttack method: ship hit but not sunken', () => {
-//     const board1 = GameboardFactory();
-//     board1.ships[0].setPosition(['1', '2']);
-//     board1.ships[1].setPosition(['3', '4', '5']);
-//     board1.ships[2].setPosition(['9', '10', '11', '12']);
-//     board1.ships[3].setPosition(['17', '18', '19', '20']);
-//     board1.receiveAttack('3');
-//     board1.receiveAttack('4');
-//     const expected = 0;
-//     expect(board1.shipsSunken).toBe(expected);
-// });
-// test('check receiveAttack method: success ship sunken', () => {
-//     const board1 = GameboardFactory();
-//     board1.ships[0].setPosition(['1', '2']);
-//     board1.ships[1].setPosition(['3', '4', '5']);
-//     board1.ships[2].setPosition(['9', '10', '11', '12']);
-//     board1.ships[3].setPosition(['17', '18', '19', '20']);
-//     board1.receiveAttack('1');
-//     board1.receiveAttack('2');
-//     const expected = 1;
-//     expect(board1.shipsSunken).toBe(expected);
-// });
-// test('check receiveAttack method: shipAttacked is true', () => {
-//     const board1 = GameboardFactory();
-//     board1.ships[0].setPosition(['a1', 'a2']);
-//     board1.ships[1].setPosition(['b1', 'b2', 'b3']);
-//     board1.ships[2].setPosition(['c1', 'c2', 'c3', 'c4']);
-//     board1.ships[3].setPosition(['d1', 'd2', 'd3', 'd4']);
-//     const expected = true;
-//     expect(board1.receiveAttack('b1')).toBe(expected);
-// });
-// test('check receiveAttack method: shipAttacked is false', () => {
-//     const board1 = GameboardFactory();
-//     board1.ships[0].setPosition(['a1', 'a2']);
-//     board1.ships[1].setPosition(['b1', 'b2', 'b3']);
-//     board1.ships[2].setPosition(['c1', 'c2', 'c3', 'c4']);
-//     board1.ships[3].setPosition(['d1', 'd2', 'd3', 'd4']);
-//     const expected = false;
-//     expect(board1.receiveAttack('e1')).toBe(expected);
-// });
-// test('check allShipsSunken method: all ships sunken false', () => {
-//     const board1 = GameboardFactory();
-//     board1.ships[0].setPosition(['a1', 'a2']);
-//     board1.ships[1].setPosition(['b1', 'b2', 'b3']);
-//     board1.ships[2].setPosition(['c1', 'c2', 'c3', 'c4']);
-//     board1.ships[3].setPosition(['d1', 'd2', 'd3', 'd4']);
-//     board1.receiveAttack('b1');
-//     board1.receiveAttack('b2');
-//     const expected = false;
-//     expect(board1.allShipsSunken()).toBe(expected);
-// });
-// test('check allShipsSunken method: all ships sunken true', () => {
-//     const board1 = GameboardFactory();
-//     board1.ships[0].setPosition(['a1', 'a2']);
-//     board1.ships[1].setPosition(['b1', 'b2', 'b3']);
-//     board1.ships[2].setPosition(['c1', 'c2', 'c3', 'c4']);
-//     board1.ships[3].setPosition(['d1', 'd2', 'd3', 'd4']);
-//     for (let i = 1; i < 3; i++) { board1.receiveAttack(`a${i}`) }
-//     for (let i = 1; i < 4; i++) { board1.receiveAttack(`b${i}`) }
-//     for (let i = 1; i < 5; i++) { board1.receiveAttack(`c${i}`) }
-//     for (let i = 1; i < 5; i++) { board1.receiveAttack(`d${i}`) }
-//     const expected = true;
-//     expect(board1.allShipsSunken()).toBe(expected);
-// });
-// test('checkIfCoordInArrayOfCoords returns true', () => {
-//     const board1 = GameboardFactory();
-//     let arr1 = [[1, 2], [3, 4, 5], [6, 7, 8, 9]];
-//     let arr2 = [20, 8];
-//     let arr3 = [6, 88];
-//     let arr4 = [4, 9];
-//     let arr5 = [[5, 6]];
-//     const expected = true;
-//     expect(board1.checkIfCoordInArrayOfCoords(arr2, arr1)).toEqual(expected);
-//     expect(board1.checkIfCoordInArrayOfCoords(arr3, arr1)).toEqual(expected);
-//     expect(board1.checkIfCoordInArrayOfCoords(arr4, arr1)).toEqual(expected);
-//     expect(board1.checkIfCoordInArrayOfCoords(arr3, arr5)).toEqual(expected);
-// });
-// test('checkIfCoordInArrayOfCoords returns false', () => {
-//     const board1 = GameboardFactory();
-//     let arr1 = [[1, 2], [3, 4, 5], [6, 7, 8, 9]];
-//     let arr2 = [49, 50];
-//     let arr3 = [16, 22];
-//     let arr4 = [[1, 2]];
-//     const expected = false;
-//     expect(board1.checkIfCoordInArrayOfCoords(arr2, arr1)).toEqual(expected);
-//     expect(board1.checkIfCoordInArrayOfCoords(arr3, arr1)).toEqual(expected);
-//     expect(board1.checkIfCoordInArrayOfCoords(arr3, arr4)).toEqual(expected);
-// });
-// test('positionComputerShips positions ships and sets board as ready', () => {
-//     const board1 = GameboardFactory();
-//     board1.positionComputerShips();
-//     const expected = true;
-//     const expected2 = 4;
-//     expect(board1.boardReady).toEqual(expected);
-//     expect(board1.ships[3].shipPosition.length).toEqual(expected2);
-// });
 
-// //Player
-// test('check checkIfMoveLegal: illegal move', () => {
-//     const player1 = CreatePlayer("human");
-//     player1.shotPositions = ['a1', 'a2', 'a3'];
-//     const expected = false;
-//     expect(player1.checkIfMoveLegal('a2')).toBe(expected);
-// });
-// test('check checkIfMoveLegal: legal move', () => {
-//     const player1 = CreatePlayer("human");
-//     player1.shotPositions = ['a1', 'a2', 'a3'];
-//     const expected = true;
-//     expect(player1.checkIfMoveLegal('b2')).toBe(expected);
-// });
-// test('check checkIfMoveLegal: legal move', () => {
-//     const player1 = CreatePlayer("human");
-//     player1.shotPositions = ['a1', 'a2', 'a3'];
-//     const expected = true;
-//     expect(player1.checkIfMoveLegal('b2')).toBe(expected);
-// });
-// test('check computerShooting moves yield nr up to 64', () => {
-//     const player1 = CreatePlayer("computer");
-//     const expected = 65;
-//     expect(parseInt(player1.computerShooting())).toBeLessThan(expected);
-// });
-// test('check computerShooting moves yield nr greater than 0', () => {
-//     const player1 = CreatePlayer("computer");
-//     const expected = 0;
-//     expect(parseInt(player1.computerShooting())).toBeGreaterThan(expected);
-// });
 

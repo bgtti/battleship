@@ -62,7 +62,7 @@ const DisplayBoard = (function () {
             let ships = [createDraggableShips("2", "1"), createDraggableShips("3", "2"), createDraggableShips("4", "3"), createDraggableShips("4", "4")];
             playerContainer.append(ships[0], ships[1], ships[2], ships[3]);
             ships.forEach(ship => { ship.classList.add(`p2Ship${ships.indexOf(ship)}`) });
-            // ships.forEach(ship => { ship.classList.add('hide') });
+            ships.forEach(ship => { ship.classList.add('hide') });
         }
 
         boardsContainer.append(playerContainer);

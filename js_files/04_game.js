@@ -1,11 +1,12 @@
 import { PositioningShips } from "./03_dragShips.js";
 import { CreatePlayer } from "./01_factory.js";
 import { explosionAnimation } from "./05_explosionAnimation.js";
+import { displayMessages } from "./06_displayMessages.js";
 const Game = (function () {
     //**** Getting necessary elements****
     // HTML elements:
-    const messageContainerP1 = document.querySelector(".messageContainerP1");
-    const messageContainerP2 = document.querySelector(".messageContainerP2");
+    // const messageContainerP1 = document.querySelector(".messageContainerP1");//see if necessary
+    // const messageContainerP2 = document.querySelector(".messageContainerP2");//see if necessary
     const gameStartBtn = document.querySelector(".startGameBtn");
     //coords from board:
     let player1Coords = document.querySelectorAll('[data-p1]');
@@ -24,15 +25,17 @@ const Game = (function () {
     let player1;
     let player2;
     let gameType;
-    let gameStarted = false; //used?
-    let gameOver = false; //used?
+    // let gameStarted = false; //used?
+    let gameOver = false;
 
     function initiateGame(player1Type, player2Type) { //player types: "Human" or "Computer"
         player1 = CreatePlayer(player1Type);
         player2 = CreatePlayer(player2Type);
         player2Type === "Computer" ? gameType = "HC" : gameType = "HH";
         gettingBoardCoords();
-    };
+        displayMessages.displayMessage("positionShipsP1", gameType);
+        gameOver = false;
+    }
 
     //**** Ship positioning functions ****
 
@@ -46,18 +49,18 @@ const Game = (function () {
             for (let x = 1; x < (player2.playersBoard.ships[i].shipPosition.length + 1); x++) { //for each ship coord
                 let theCoordToAppend = document.querySelector(`[data-p2="${String(shipPosition[x - 1])}"]`);
                 let theShipPart = theShip.querySelector(`.ship-${i + 1}-part-${x}`);
-                if (shipDirection === "vertical") { theShipPart.classList.add("ship-part-vertical") }
+                if (shipDirection === "vertical") { theShipPart.classList.add("ship-part-vertical") };
                 player2.playersBoard.ships[i].shipParts.push(theShipPart);
+                theShipPart.classList.add("hide");
                 theCoordToAppend.append(theShipPart);
-                //HIDE THE SHIPS
             }
         }
     }
 
     // sorting coordinates by ship number (helper function)
     function sortShips(arrayOfShips) {
-        return arrayOfShips.sort((a, b) => { return a[0] - b[0] })
-    };
+        return arrayOfShips.sort((a, b) => { return a[0] - b[0] });
+    }
 
     //setting ship position
     function setShipPosition() {
@@ -101,7 +104,7 @@ const Game = (function () {
     function resettingCursor(element) {
         if (element) {
             element.classList.remove("cursorTarget");
-        }
+        };
     }
 
     //**** Function to reset modified HTML elements ****
@@ -110,57 +113,73 @@ const Game = (function () {
         resettingCursor(player2Board);
         if (gameType === "HC") {
             gameStartBtn.classList.remove("hide");
-            messageContainerP1.textContent = "Drag your ships into position.";
-            messageContainerP2.textContent = "Press the start button when you are ready.";
+            displayMessages.displayMessage("positionShipsP1", gameType);
         } else {
-            //write HH logic here ********************
+            gameStartBtn.classList.add("hide");
+            displayMessages.displayMessage("positionShipsP1", gameType);
+            //write full HH logic here ******************** needs button after message
         }
     }
 
-    // **** Game over functions ****
-    //What to do when game is over
-    function gameIsOver() {
-        //display gameOver message
-    }
 
-    //Game over
-    function checkIfGameOver(playerAttacked) {
-        playerAttacked.playersBoard.allShipsSunken() === true ? gameOver === true : gameOver === false;
-        return gameOver;
+
+    // **** Game over function ****
+    //What to do when game is over
+    function gameIsOver(whoWon) {
+        gameOver === true;
+        player1.playersTurn = false;
+        player2.playersTurn = false;
+        whoWon === player1 ? displayMessages.displayMessage("p1Wins", gameType) : displayMessages.displayMessage("p2Wins", gameType);
+        ///////*************include button to re-start game */
+        // unhide all ships & make board white
     }
 
     // **** Attack functions ****
     //Visual hit on board
-    function visualCoordHit(e, hitSuccess, targetEl) {
+    function visualCoordHit(e, hitSuccess, shipParts, targetEl) {
         if (e === "C") {
-            explosionAnimation.playAnimation(targetEl, hitSuccess)
+            explosionAnimation.playAnimation(targetEl, hitSuccess, shipParts);
         } else {
-            explosionAnimation.playAnimation(e.currentTarget, hitSuccess)
+            explosionAnimation.playAnimation(e.currentTarget, hitSuccess, shipParts);
         }
-        //background color on hit to be white
-        //set class to enable another cursor over hit spot
     }
-
-    // //check if ship sank
-    // function shipHasSunk(player){ //player1 or player2
-    //     player.playersBoard.
-    // }
 
     //Shooting a coord (on board click):
     function boardClick(playerAttacking, playerAttacked, e) {
         if (playerAttacking.checkIfMoveLegal(e.currentTarget.dataset) === true) {
-            //checks if hit was successful and whether the ship sank:
             let theAttack;
             let hitSuccess;
             let sankShip;
+            let shipParts = false;
+
+            function analyseShot(player) {
+                let p;
+                player === player1 ? p = "p1" : p = "p2";
+                if (hitSuccess === true) {
+                    displayMessages.displayMessage(`${p}ShotSuccess`, gameType);
+                    if (sankShip === true) {
+                        shipParts = theAttack[2];
+                        if (playerAttacked.playersBoard.allShipsSunken() === true) {
+                            gameIsOver(playerAttacking);
+                        }
+                    }
+                } else {
+                    displayMessages.displayMessage(`${p}ShotMissed`, gameType);
+                }
+            }
+
+            //check if hit was successfull and whether ship sank
             if (playerAttacking === player1) {
                 theAttack = player2.playersBoard.receiveAttack(e.currentTarget.dataset.p2)
                 hitSuccess = theAttack[0];
                 sankShip = theAttack[1];
+                analyseShot(player1);
+
             } else {
                 theAttack = player1.playersBoard.receiveAttack(e.currentTarget.dataset.p1)
                 hitSuccess = theAttack[0];
                 sankShip = theAttack[1];
+                analyseShot(player2);
             }
 
             playerAttacking.playersTurn = false;
@@ -168,15 +187,7 @@ const Game = (function () {
 
             //visual representation of hit on the board
 
-            //visual hit should also accept: if ship sank, pass on the ship parts to paint them red...
-            visualCoordHit(e, hitSuccess); ///make async....
-
-            if (playerAttacked.playersBoard.allShipsSunken() === true) {
-                //game over -------WRONG!!! NOT WORKING!
-                playerAttacking.playersTurn = false;
-                playerAttacked.playersTurn = false;
-                return console.log(":-(")
-            }
+            visualCoordHit(e, hitSuccess, shipParts);
 
             if ((gameType === "HC") && (player2.playersTurn = true)) {
                 let coordOfComputerAttack;
@@ -187,13 +198,16 @@ const Game = (function () {
                         setTimeout(() => {
                             coordOfComputerAttack = player2.computerShooting();
                             resolve();
-                        }, 500)
+                        }, 2000)
                     })
                 }
                 compAtt().then(() => {
                     coordInBoard = document.querySelector(`[data-p1="${coordOfComputerAttack}"]`);
-                    hitSuccess = player1.playersBoard.receiveAttack(coordOfComputerAttack)[0];
-                    visualCoordHit("C", hitSuccess, coordInBoard);
+                    theAttack = player1.playersBoard.receiveAttack(coordOfComputerAttack);
+                    hitSuccess = theAttack[0];
+                    sankShip = theAttack[1];
+                    analyseShot(player2);
+                    visualCoordHit("C", hitSuccess, shipParts, coordInBoard);
                 }
                 ).then(() => {
                     player1.playersTurn = true;
@@ -229,19 +243,14 @@ const Game = (function () {
             setShipPosition() //// **** only working for HC
             player1.playersTurn = true;
             gameStartBtn.classList.add("hide");
-            messageContainerP1.textContent = "Game started! Human's turn to attack!";
-            messageContainerP2.textContent = "Click a coordinate on the Computer's board to shoot it.";
+            displayMessages.displayMessage("gameStart", gameType);
             gettingBoardCoords();
             gameStarted = true;
             settingCursorTarget(player2Board);
-            enableEventListenersOnBoards()
+            enableEventListenersOnBoards();
         }
     }
 
-    //*** */
-
-    //NEXT STEPS: add looping function that players take turns
-    //add computer shooting
 
     return {
         initiateGame,
@@ -258,111 +267,3 @@ const Game = (function () {
 })()
 
 export { Game }
-
-
-//***************************** */
-// OLD VERSION:
-
-// **** Attack functions ****
-//Visual hit on board
-// function visualCoordHit(e, hitSuccess, targetEl) {
-//     // let hitSpotIcon = document.createElement('ion-icon');
-//     // hitSpotIcon.setAttribute("name", "close");
-//     // let hitAttribute;
-//     // hitSuccess === true ? hitAttribute = "spot-hit-green" : hitAttribute = "spot-hit-red"
-//     // hitSpotIcon.setAttribute("class", `${hitAttribute}`);
-
-//     // const theAnimation = (targeTDiv) => {
-//     //     return new Promise((resolve) => {
-//     //         explosionAnimation.playAnimation(targeTDiv)
-//     //         resolve()
-//     //     })
-//     // }
-
-
-//     if (e === "C") {
-//         explosionAnimation.playAnimation(targetEl, hitSuccess)
-//         // theAnimation(targetEl).then(() => {
-//         //     targetEl.append(hitSpotIcon)
-//         //     console.log("its C")
-//         // })
-//         // explosionAnimation.playAnimation(targetEl)
-//         // targetEl.append(hitSpotIcon)
-//         // console.log("its C")
-//     } else {
-//         explosionAnimation.playAnimation(e.currentTarget, hitSuccess)
-//         // theAnimation(e.currentTarget).then(() => {
-//         //     console.log("its not C " + e.currentTarget)
-//         //     e.currentTarget.append(hitSpotIcon);
-//         // })
-//         // explosionAnimation.playAnimation(e.currentTarget)
-//         // console.log("its not C " + e.currentTarget)
-//         // e.currentTarget.append(hitSpotIcon);
-//     }
-
-//     // e === "C" ? explosionAnimation.playAnimation(targetEl) : explosionAnimation.playAnimation(e.currentTarget);
-//     // let hitSpotIcon = document.createElement('ion-icon');
-//     // hitSpotIcon.setAttribute("name", "close");
-//     // let hitAttribute;
-//     // hitSuccess === true ? hitAttribute = "spot-hit-green" : hitAttribute = "spot-hit-red"
-//     // hitSpotIcon.setAttribute("class", `${hitAttribute}`);
-//     // e === "C" ? targetEl.append(hitSpotIcon) : e.currentTarget.append(hitSpotIcon);
-
-
-//     //background color on hit to be white
-//     //set class to enable another cursor over hit spot
-// }
-
-// //Shooting a coord (on board click):
-// function boardClick(playerAttacking, playerAttacked, e) {
-//     if (playerAttacking.checkIfMoveLegal(e.currentTarget.dataset) === true) {
-//         let hitSuccess;
-//         if (playerAttacking === player1) {
-//             hitSuccess = player2.playersBoard.receiveAttack(e.currentTarget.dataset.p2);
-//         } else {
-//             hitSuccess = player1.playersBoard.receiveAttack(e.currentTarget.dataset.p1);
-//         }
-//         playerAttacking.playersTurn = false;
-//         playerAttacked.playersTurn = true;
-
-//         visualCoordHit(e, hitSuccess); ///make async....
-
-//         if (playerAttacked.playersBoard.allShipsSunken() === true) {
-//             //game over
-//             playerAttacking.playersTurn = false;
-//             playerAttacked.playersTurn = false;
-//             return console.log(":-(")
-//         }
-
-//         if ((gameType === "HC") && (player2.playersTurn = true)) {
-//             let coordOfComputerAttack;
-//             let coordInBoard;
-
-//             let compAtt = function () {
-//                 return new Promise(resolve => {
-//                     setTimeout(() => {
-//                         coordOfComputerAttack = player2.computerShooting();
-//                         resolve();
-//                     }, 500)
-//                 })
-//             }
-//             compAtt().then(() => {
-//                 coordInBoard = document.querySelector(`[data-p1="${coordOfComputerAttack}"]`);
-//                 hitSuccess = player1.playersBoard.receiveAttack(coordOfComputerAttack);
-//                 visualCoordHit("C", hitSuccess, coordInBoard);
-//             }
-//             ).then(() => {
-//                 player1.playersTurn = true;
-//                 player2.playersTurn = false;
-//             });
-
-
-//             // let coordOfComputerAttack = player2.computerShooting();
-//             // let coordInBoard = document.querySelector(`[data-p1="${coordOfComputerAttack}"]`)
-//             // hitSuccess = player1.playersBoard.receiveAttack(coordOfComputerAttack);
-//             // visualCoordHit("C", hitSuccess, coordInBoard);
-//             // player1.playersTurn = true;
-//             // player2.playersTurn = false;
-//         }
-//     };
-// }

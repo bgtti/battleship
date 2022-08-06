@@ -12,6 +12,7 @@
     --cGrey: rgb(126, 126, 133);
     --cNavyBlueFilter: invert(16%) sepia(9%) saturate(2787%) hue-rotate(183deg) brightness(92%) contrast(95%);
     --cBeigeFilter: invert(54%) sepia(39%) saturate(459%) hue-rotate(347deg) brightness(98%) contrast(84%);
+    --cRedFilter: brightness(0) saturate(100%) invert(9%) sepia(49%) saturate(6070%) hue-rotate(340deg) brightness(101%) contrast(86%);
 }
 /* convert hex to CSS filter:  https://codepen.io/sosuke/pen/Pjoqqp  */
 *{
@@ -171,11 +172,11 @@ background-color: rgb(255, 0, 98);
 }
 
 /* Coord hit */
-.spot-hit-green, .spot-hit-red{
+.spot-hit-blue, .spot-hit-red{
     font-size: 50px;
 }
-.spot-hit-green{
-    color: green;
+.spot-hit-blue{
+    color: var(--cNavyBlue);
 }
 .spot-hit-red{
     color: var(--cRed);
@@ -221,6 +222,9 @@ flex-direction: column;
 }
 .ship-not-positioned{
     cursor:grab;
+}
+.ship-part-sunk{
+    filter: var(--cRedFilter);
 }
 /* .ship-sub-container-0 .ship-part-1{
     

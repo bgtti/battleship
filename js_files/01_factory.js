@@ -136,6 +136,7 @@ function GameboardFactory() {
             let missed = true;
             let shipAttacked = false;
             let shipSunk = false;
+            let shipParts;
             for (let ship of this.ships) {
                 if (ship.shipPosition.includes(coord)) {
                     missed = false;
@@ -144,13 +145,14 @@ function GameboardFactory() {
                     if (ship.hasSunken === true) {
                         shipSunk = true;
                         this.shipsSunken++;
+                        shipParts = [...ship.shipParts]
                     }
                 }
             }
             if (missed === true) {
                 this.missedAttacks.push(coord)
             }
-            return [shipAttacked, shipSunk]
+            return [shipAttacked, shipSunk, shipParts]
         },
         allShipsSunken() {
             if (this.ships.length === this.shipsSunken) {

@@ -10,11 +10,11 @@
     --cOpaqueBeige: #b5875e10;
     --cRed: #811c2c;
     --cGrey: rgb(126, 126, 133);
+    /* convert hex to CSS filter:  https://codepen.io/sosuke/pen/Pjoqqp  */
     --cNavyBlueFilter: invert(16%) sepia(9%) saturate(2787%) hue-rotate(183deg) brightness(92%) contrast(95%);
     --cBeigeFilter: invert(54%) sepia(39%) saturate(459%) hue-rotate(347deg) brightness(98%) contrast(84%);
     --cRedFilter: brightness(0) saturate(100%) invert(9%) sepia(49%) saturate(6070%) hue-rotate(340deg) brightness(101%) contrast(86%);
 }
-/* convert hex to CSS filter:  https://codepen.io/sosuke/pen/Pjoqqp  */
 *{
     margin:0;
     padding: 0;
@@ -48,8 +48,24 @@ body{
     color: var(--cBeige);
     font-weight: lighter;
 }
+@media only screen and (max-width: 600px){
+.title h1{
+    font-size: 30px;
+}
+.anchor{
+    height: 30px;
+}
+}
+@media only screen and (max-width: 350px) {
+    .title h1 {
+        font-size: 20px;
+    }
+    .anchor {
+        height: 20px;
+    }
+}
 
-/* Button container */
+/* Button container: HC or HH game type */
 .button-container{
     margin: var(--marginBig) 0 0 0;
     display: flex;
@@ -62,7 +78,6 @@ body{
     padding: var(--paddingBtns);
     text-decoration: none;
     font-size: 17px;
-    /* font-weight: bold; */
     color: var(--cBeige);
     background-color: white;
     border: 2px solid var(--cNavyBlue);
@@ -76,11 +91,18 @@ body{
     border: 2px solid var(--cNavyBlue);
     border-bottom: none;
 }
-.game-type-btns:hover{
-    background-color: var(--cBeige);
-    color: var(--cNavyBlue);
-    border: 2px solid var(--cNavyBlue);
-    border-bottom: none;
+@media only screen and (max-width: 600px) {
+    .game-type-btns {
+        font-size: 12px;
+    }
+}
+@media (hover: hover) {
+    .game-type-btns:hover {
+        background-color: var(--cBeige);
+        color: var(--cNavyBlue);
+        border: 2px solid var(--cNavyBlue);
+        border-bottom: none;
+    }
 }
 /* ****** CONTENT ****** */
 /* message container */
@@ -93,13 +115,13 @@ body{
 .message-container{
     display: flex;
     flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    justify-content: center;
+    align-items: center;
 }
 .content p{
     color: var(--cNavyBlue);
 }
-.start-game-btn{
+.button-style{
     margin: var(--marginSmall) 0 var(--marginSmall) 0;
     border: 2px solid var(--cNavyBlue);
     background-color: var(--cBeige);
@@ -107,24 +129,33 @@ body{
     border-radius: var(--borderRadius);
     font-size: 15px;
     font-weight: bold;
-
-}
-.start-game-btn:hover {
-    background-color: var(--cNavyBlue);
-    border: 2px solid var(--cNavyBlue);
-    color: var(--cBeige);
-    cursor: pointer;
 }
 .start-game-btn-not-ready{
     border: 2px solid var(--cOpaqueNavyBlue);
-        background-color: var(--cOpaqueBeige);
-        color: var(--cOpaqueNavyBlue) ;
-}
-.start-game-btn-not-ready:hover {
-    border: 2px solid var(--cOpaqueNavyBlue);
     background-color: var(--cOpaqueBeige);
-    color: var(--cOpaqueNavyBlue);
-    cursor: default;
+    color: var(--cOpaqueNavyBlue) ;
+}
+@media only screen and (max-width: 600px) {
+    .button-style{
+        font-size: 12px;
+    }
+    .message-container{
+        font-size: 12px;
+    }
+}
+@media (hover: hover) {
+    .button-style:hover {
+            background-color: var(--cNavyBlue);
+            border: 2px solid var(--cNavyBlue);
+            color: var(--cBeige);
+            cursor: pointer;
+    }
+    .start-game-btn-not-ready:hover {
+        border: 2px solid var(--cOpaqueNavyBlue);
+        background-color: var(--cOpaqueBeige);
+        color: var(--cOpaqueNavyBlue);
+        cursor: default;
+    }
 }
 
 /* Boards */
@@ -134,6 +165,7 @@ body{
     align-items: flex-start;
     justify-content: center;
     gap: var(--marginBig);
+    flex-wrap: wrap;
 }
 .player-container{
     display: flex;
@@ -144,24 +176,12 @@ body{
 }
 .board-p1, .board-p2{
     border: 1px solid var(--cNavyBlue);
-    /* height: 400px;
-    width: 400px; */
-    /* display: flex;
-    flex-wrap: wrap; */
     display: grid;
     grid-template-rows: repeat(8, 50px);
     grid-template-columns: repeat(8, 50px);
     
 }
-/* .board-1{
-    background-color: blue;
-}
-.board-2{
-background-color: rgb(255, 0, 98);
-} */
 .coord-div{
-    /* height: 50px;
-    width: 50px; */
     border: 1px solid var(--cNavyBlue);
     display: flex;
     align-items: center;
@@ -169,6 +189,23 @@ background-color: rgb(255, 0, 98);
 }
 .hidden-coord{
     background-color: var(--cGrey);
+}
+@media only screen and (max-width: 600px) {
+    .player-name {
+        font-size: 17px;
+    }
+    .board-p1,
+    .board-p2 {
+        grid-template-rows: repeat(8, 45px);
+        grid-template-columns: repeat(8, 45px);
+    }
+}
+@media only screen and (max-width: 350px) {
+    .board-p1,
+    .board-p2 {
+        grid-template-rows: repeat(8, 30px);
+        grid-template-columns: repeat(8, 30px);
+    }
 }
 
 /* Coord hit */
@@ -180,6 +217,20 @@ background-color: rgb(255, 0, 98);
 }
 .spot-hit-red{
     color: var(--cRed);
+}
+
+@media only screen and (max-width: 600px) {
+    .spot-hit-blue,
+    .spot-hit-red {
+        font-size: 45px;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    .spot-hit-blue,
+    .spot-hit-red {
+        font-size: 30px;
+    }
 }
 
 /* Ships to be positioned */
@@ -200,21 +251,16 @@ background-color: rgb(255, 0, 98);
     cursor:pointer;
     color: var(--cNavyBlue);
 }
-.rotate-ship-icon:hover{
-color: var(--cBeige);
-}
 .the-ship{
     display: flex;
+    /* touch-action: manipulation; */
 }
 .the-ship-vertical{
-/* transform:rotate(90deg);
-transform-origin: bottom right; */
 flex-direction: column;
 }
 .ship-part{
     width: 48px;
     height: 48px;
-    /* background-color: rgb(0, 255, 255); */
 }
 .the-ship-vertical .ship-part{
     transform:rotate(90deg);
@@ -226,20 +272,28 @@ flex-direction: column;
 .ship-part-sunk{
     filter: var(--cRedFilter);
 }
-/* .ship-sub-container-0 .ship-part-1{
-    
-background: url('./images/ship_1.png') no-repeat center bottom/cover;
-background-position: left;
-}
-.ship-sub-container-0 .ship-part-2 {
-    background-color: var(--cNavyBlue);
-    background: url('./images/ship_1.png') no-repeat center bottom/cover;
-        background-position: right;
-        background-color: var(--cNavyBlue);
-    /* background: url('images/navalShip_3.png') no-repeat center bottom/cover; */
-/* } */ 
 .coords-on-drag{
     background-color: var(--cBeige);
+}
+@media only screen and (max-width: 600px) {
+    .ship-part {
+        width: 43px;
+        height: 43px;
+    }
+}
+@media only screen and (max-width: 350px) {
+    .rotate-ship-icon {
+        font-size: 28px;
+    }
+    .ship-part {
+        width: 28px;
+        height: 28px;
+    }
+}
+@media (hover: hover) {
+    .rotate-ship-icon:hover {
+        color: var(--cBeige);
+    }
 }
 
 /* Individual ship styling */
@@ -269,14 +323,12 @@ background-position: left;
     background: url('./images/ship_2.png') no-repeat center bottom/cover;
     background-position: right;
 }
-
 .ship-2-part-1.ship-part-vertical,
 .ship-2-part-2.ship-part-vertical,
 .ship-2-part-3.ship-part-vertical {
     transform: rotate(90deg);
     transform-origin: center;
 }
-
 .ship-3-part-1 {
     background: url('./images/ship_3_a.png') no-repeat center bottom/cover;
     background-position: left;
@@ -299,27 +351,22 @@ background-position: left;
     transform: rotate(90deg);
     transform-origin: center;
 }
-
 .ship-4-part-1 {
     background: url('./images/ship_4_a.png') no-repeat center bottom/cover;
     background-position: left;
 }
-
 .ship-4-part-2 {
     background: url('./images/ship_4_a.png') no-repeat center bottom/cover;
     background-position: right;
 }
-
 .ship-4-part-3 {
     background: url('./images/ship_4_b.png') no-repeat center bottom/cover;
     background-position: left;
 }
-
 .ship-4-part-4 {
     background: url('./images/ship_4_b.png') no-repeat center bottom/cover;
     background-position: right;
 }
-
 .ship-4-part-1.ship-part-vertical,
 .ship-4-part-2.ship-part-vertical,
 .ship-4-part-3.ship-part-vertical,
@@ -328,11 +375,25 @@ background-position: left;
     transform-origin: center;
 }
 
+/* ****** SWITCH MODAL ****** */
+.boards-container{
+    position: relative;
+}
+.switch-modal{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* ****** CURSOR AND HIDE ****** */
 /* cursor target */
 /* Source: "https://www.flaticon.com/free-icons/target" Target icon created by Pixel perfect - Flaticon */
 .cursorTarget{
     cursor: url('./images/iconTarget.png') 16 16, auto;
-    
 }
 /* hide items */
 .hide{
@@ -365,7 +426,6 @@ footer ion-icon {
     font-size: 20px;
     padding-left: 5px;
     color: var(--cNavyBlue);
-
 }
 
 footer ion-icon:hover {

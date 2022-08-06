@@ -15,6 +15,7 @@ displays the player's boards on the screen.
 03_dragShips.js:
 responsible for the drag and drop logic (ship positioning of players of type 'human').
 the information about ship positioning is then sent to game.js.
+note this project uses Bernardo-Castilho's dragdroptouch polyfill to handle mobile drag and drop.
 
 04_game.js:
 responsible for the game loop. Uses values from the objects in factory.js and their methods.

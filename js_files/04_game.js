@@ -28,6 +28,27 @@ const Game = (function () {
     // let gameStarted = false; //used?
     let gameOver = false;
 
+    //hiding other player's coordinates:
+    function hidingCoords(player) { //accepts "p1" or "p2"
+        //make all boards white:
+        player1Coords.forEach(coord => { coord.classList.remove("hidden-coord") });
+        player2Coords.forEach(coord => { coord.classList.remove("hidden-coord") });
+        //make board dark:
+        let playerCoords = document.querySelectorAll(`[data-${player}]`);
+        playerCoords.forEach(coord => { coord.classList.add("hidden-coord") });
+        //hide unpositioned ships
+        let shipContainer = document.querySelectorAll(`.shipContainer`);
+        shipContainer.forEach(ship => { ship.classList.remove("hide") });
+        let shipContainerPlayer = document.querySelectorAll(`.shipContainer${player}`);
+        shipContainerPlayer.forEach(ship => { ship.classList.add("hide") });
+        //hide shipParts (of ships that are not sunk)
+        let allShipParts = document.querySelectorAll(".shipPartNotSunk");
+        allShipParts.forEach(part => { part.classList.remove("hide") });
+        let playersShipParts = document.querySelectorAll(`.shipPartNotSunk${player}`);
+        playersShipParts.forEach(part => { part.classList.add("hide") });
+    }
+
+    //initiation:
     function initiateGame(player1Type, player2Type) { //player types: "Human" or "Computer"
         player1 = CreatePlayer(player1Type);
         player2 = CreatePlayer(player2Type);
@@ -35,6 +56,9 @@ const Game = (function () {
         gettingBoardCoords();
         displayMessages.displayMessage("positionShipsP1", gameType);
         gameOver = false;
+        if (gameType = "HH") {
+            hidingCoords("p2")
+        }
     }
 
     //**** Ship positioning functions ****
@@ -154,11 +178,17 @@ const Game = (function () {
 
             function analyseShot(player) {
                 let p;
+                let otherP;
                 player === player1 ? p = "p1" : p = "p2";
+                player === player1 ? otherP = "p2" : otherP = "p1";
                 if (hitSuccess === true) {
                     displayMessages.displayMessage(`${p}ShotSuccess`, gameType);
                     if (sankShip === true) {
                         shipParts = theAttack[2];
+                        shipParts.forEach(part => {
+                            part.classList.remove("shipPartNotSunk")
+                            part.classList.remove(`.shipPartNotSunk${otherP}`)
+                        });
                         if (playerAttacked.playersBoard.allShipsSunken() === true) {
                             gameIsOver(playerAttacking);
                         }

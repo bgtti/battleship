@@ -1,15 +1,15 @@
-import { DisplayBoard } from "./02_htmlDisplay.js";
+import { DisplayBoard, DisplayOthers } from "./02_htmlDisplay.js";
 import { CreatePlayer } from "./01_factory.js";
 import { PositioningShips } from "./03_dragShips.js"
 import { Game } from "./04_game.js"
 
 //hiding other player's coordinates:
-function hidingCoords(player) { //accepts "p1" or "p2"
-    let playerCoords = document.querySelectorAll(`[data-${player}]`);
-    playerCoords.forEach(coord => coord.classList.add("hidden-coord"));
-    // playerCoords.classList.add("hidden-coord");
-    // console.log(playerCoords);
-}
+// function hidingCoords(player) { //accepts "p1" or "p2"
+//     let playerCoords = document.querySelectorAll(`[data-${player}]`);
+//     playerCoords.forEach(coord => coord.classList.add("hidden-coord"));
+//     // playerCoords.classList.add("hidden-coord");
+//     // console.log(playerCoords);
+// }
 //game type buttons:
 let gameTypeHCBtn = document.querySelector('.gameTypeHC');
 let gameTypeHHBtn = document.querySelector('.gameTypeHH');
@@ -20,9 +20,10 @@ function gameIsHC() {
     gameTypeHCBtn.classList.add('game-type-btn-clicked');
     DisplayBoard.createBoard("p1", "Human");
     DisplayBoard.createBoard("p2", "Computer");
+    DisplayOthers.clearPositionBtns();
     Game.initiateGame("Human", "Computer");
     Game.resettingHTMLElements();
-    hidingCoords("p2");
+    // hidingCoords("p2");
     PositioningShips.activatingDragDropELs()
 };
 function gameIsHH() {
@@ -30,6 +31,8 @@ function gameIsHH() {
     gameTypeHHBtn.classList.add('game-type-btn-clicked');
     DisplayBoard.createBoard("p1", "Player 1");
     DisplayBoard.createBoard("p2", "Player 2");
+    DisplayOthers.switchPlayerModal();
+    DisplayOthers.positionShipBtns();
     Game.initiateGame("Human", "Human");
     Game.resettingHTMLElements();
     PositioningShips.activatingDragDropELs()

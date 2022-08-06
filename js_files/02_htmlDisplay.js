@@ -35,6 +35,8 @@ const DisplayBoard = (function () {
                 let shipPart = document.createElement('div');
                 shipPart = document.createElement('div');
                 shipPart.classList.add('ship-part');
+                shipPart.classList.add('shipPartNotSunk');
+                shipPart.classList.add(`shipPartNotSunk${boardId}`);
                 shipPart.classList.add(`ship-${shipNr}-part-${i}`);
                 shipPart.classList.add(`${boardId}-ship-${shipNr}-part-${i}`);
                 ship.appendChild(shipPart);
@@ -44,6 +46,8 @@ const DisplayBoard = (function () {
         if ((playerName === "Human") || (playerName === "Player 1") || (playerName === "Player 2")) {
             let shipContainer = document.createElement('div');
             shipContainer.setAttribute("class", "ship-container");
+            shipContainer.classList.add(`shipContainer${boardId}`);
+            shipContainer.classList.add(`shipContainer`);
 
             let ships = [createDraggableShips("2", "1"), createDraggableShips("3", "2"), createDraggableShips("4", "3"), createDraggableShips("4", "4")]
             for (let i = 0; i < ships.length; i++) {
@@ -74,16 +78,65 @@ const DisplayBoard = (function () {
         }
     }
 
-    //drawing initial board currently in index.js
-    // createBoard("p1", "Human");
-    // createBoard("p2", "Computer");
-
     return {
         createBoard,
         resetBoard
     }
 })();
 
+const DisplayOthers = (function () {
+    function switchPlayerModal() {
+        let theSwitchModal = document.createElement('div');
+        theSwitchModal.classList.add('switch-modal');
+        theSwitchModal.classList.add('hide');
+
+        let theSwitchButtonP1 = document.createElement('button');
+        theSwitchButtonP1.textContent = "Player 1 Ready";
+        theSwitchButtonP1.classList.add('button-style');
+        theSwitchButtonP1.classList.add('p1ReadyBtn');//used?
+
+        let theSwitchButtonP2 = document.createElement('button');
+        theSwitchButtonP2.textContent = "Player 2 Ready";
+        theSwitchButtonP2.classList.add('button-style');
+        theSwitchButtonP2.classList.add('p2ReadyBtn');//used?
+
+
+        theSwitchModal.append(theSwitchButtonP1, theSwitchButtonP2);
+
+        let boardsContainer = document.querySelector('.boardsContainer');
+        boardsContainer.append(theSwitchModal);
+    }
+
+    function clearPositionBtns() {
+        let clearingBtns = document.querySelectorAll(".pShipReadyBtn")
+        clearingBtns.forEach(btn => { btn.remove() });
+    }
+    function positionShipBtns() {
+        clearPositionBtns()
+
+        let shipPositioningButtonP1 = document.createElement('button');
+        shipPositioningButtonP1.textContent = "Player 1 board ready";
+        shipPositioningButtonP1.classList.add('button-style');
+        shipPositioningButtonP1.classList.add('pShipReadyBtn');
+        shipPositioningButtonP1.classList.add('p1ShipReadyBtn');//used?
+
+        let shipPositioningButtonP2 = document.createElement('button');
+        shipPositioningButtonP2.textContent = "Player 2 board ready";
+        shipPositioningButtonP2.classList.add('button-style');
+        shipPositioningButtonP2.classList.add('pShipReadyBtn');
+        shipPositioningButtonP2.classList.add('p2ShipReadyBtn');//used?
+
+        let messageContainer = document.querySelector('.messageContainer');
+        messageContainer.append(shipPositioningButtonP1, shipPositioningButtonP2);
+    }
+    return {
+        switchPlayerModal,
+        clearPositionBtns,
+        positionShipBtns
+    }
+})()
+
 export {
     DisplayBoard,
+    DisplayOthers
 }

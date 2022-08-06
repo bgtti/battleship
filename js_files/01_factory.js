@@ -132,7 +132,7 @@ function GameboardFactory() {
             }
         },
         receiveAttack(coordReceived) {
-            let coord = parseInt(coordReceived);
+            const coord = parseInt(coordReceived);
             let missed = true;
             let shipAttacked = false;
             let shipSunk = false;

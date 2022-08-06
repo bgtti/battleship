@@ -150,14 +150,17 @@ const Game = (function () {
     function boardClick(playerAttacking, playerAttacked, e) {
         if (playerAttacking.checkIfMoveLegal(e.currentTarget.dataset) === true) {
             //checks if hit was successful and whether the ship sank:
+            let theAttack;
             let hitSuccess;
             let sankShip;
             if (playerAttacking === player1) {
-                hitSuccess = player2.playersBoard.receiveAttack(e.currentTarget.dataset.p2)[0];
-                sankShip = player2.playersBoard.receiveAttack(e.currentTarget.dataset.p2)[1];
+                theAttack = player2.playersBoard.receiveAttack(e.currentTarget.dataset.p2)
+                hitSuccess = theAttack[0];
+                sankShip = theAttack[1];
             } else {
-                hitSuccess = player1.playersBoard.receiveAttack(e.currentTarget.dataset.p1)[0];
-                sankShip = player1.playersBoard.receiveAttack(e.currentTarget.dataset.p1)[1];
+                theAttack = player1.playersBoard.receiveAttack(e.currentTarget.dataset.p1)
+                hitSuccess = theAttack[0];
+                sankShip = theAttack[1];
             }
 
             playerAttacking.playersTurn = false;

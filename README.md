@@ -8,6 +8,7 @@ It was written in HTML, CSS, and vanilla JavaScript, with Jest for testing.
 ![BattleShipPreview](/images/BattleShip_Preview.png)
 
 How the game is structured:
+
 00_index.js:
 contains event listener for the type of game buttons, and allows for the change of game type.
 The game can be of type Human vs Human ("HH") or Human vs Computer ("HC").

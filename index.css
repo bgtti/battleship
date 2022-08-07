@@ -1,0 +1,435 @@
+:root{
+    --font: 'Open Sans', sans-serif;
+    --marginSmall: 10px;
+    --marginBig: 20px;
+    --paddingBtns: 5px 10px;
+    --borderRadius: 10%;
+    --cNavyBlue: #1f2b44;
+    --cOpaqueNavyBlue: #1f2b441c;
+    --cBeige: #b5875e;
+    --cOpaqueBeige: #b5875e10;
+    --cRed: #811c2c;
+    --cGrey: rgb(126, 126, 133);
+    /* convert hex to CSS filter:  https://codepen.io/sosuke/pen/Pjoqqp  */
+    --cNavyBlueFilter: invert(16%) sepia(9%) saturate(2787%) hue-rotate(183deg) brightness(92%) contrast(95%);
+    --cBeigeFilter: invert(54%) sepia(39%) saturate(459%) hue-rotate(347deg) brightness(98%) contrast(84%);
+    --cRedFilter: brightness(0) saturate(100%) invert(9%) sepia(49%) saturate(6070%) hue-rotate(340deg) brightness(101%) contrast(86%);
+}
+*{
+    margin:0;
+    padding: 0;
+    font-family: var(--font);
+}
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+}
+.title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--cNavyBlue);
+}
+.anchor{
+    height: 50px;
+    margin: 0 var(--marginSmall) 0 var(--marginSmall);
+    filter: var(--cNavyBlueFilter);
+    /* filter: var(--cBeigeFilter); */
+}
+.anchor-2{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+.title h1{
+    font-size: 50px;
+}
+.title span{
+    color: var(--cBeige);
+    font-weight: lighter;
+}
+@media only screen and (max-width: 600px){
+.title h1{
+    font-size: 30px;
+}
+.anchor{
+    height: 30px;
+}
+}
+@media only screen and (max-width: 350px) {
+    .title h1 {
+        font-size: 20px;
+    }
+    .anchor {
+        height: 20px;
+    }
+}
+
+/* Button container: HC or HH game type */
+.button-container{
+    margin: var(--marginBig) 0 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--marginSmall);
+    border-bottom: 5px solid var(--cNavyBlue);
+}
+.game-type-btns{
+    padding: var(--paddingBtns);
+    text-decoration: none;
+    font-size: 17px;
+    color: var(--cBeige);
+    background-color: white;
+    border: 2px solid var(--cNavyBlue);
+    border-bottom: none;
+    border-top-right-radius: var(--borderRadius);
+    border-top-left-radius: var(--borderRadius);
+}
+.game-type-btn-clicked{
+    color: var(--cBeige);
+    background-color: var(--cNavyBlue);
+    border: 2px solid var(--cNavyBlue);
+    border-bottom: none;
+}
+@media only screen and (max-width: 600px) {
+    .game-type-btns {
+        font-size: 12px;
+    }
+}
+@media (hover: hover) {
+    .game-type-btns:hover {
+        background-color: var(--cBeige);
+        color: var(--cNavyBlue);
+        border: 2px solid var(--cNavyBlue);
+        border-bottom: none;
+    }
+}
+/* ****** CONTENT ****** */
+/* message container */
+.content{
+    flex-grow:10;
+    margin: var(--marginSmall) 0 var(--marginSmall) 0;
+    display: flex;
+    flex-direction: column;
+}
+.message-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.content p{
+    color: var(--cNavyBlue);
+}
+.button-style{
+    margin: var(--marginSmall) 0 var(--marginSmall) 0;
+    border: 2px solid var(--cNavyBlue);
+    background-color: var(--cBeige);
+    padding: var(--paddingBtns);
+    border-radius: var(--borderRadius);
+    font-size: 15px;
+    font-weight: bold;
+}
+.start-game-btn-not-ready,
+.button-style-not-ready{
+    border: 2px solid var(--cOpaqueNavyBlue);
+    background-color: var(--cOpaqueBeige);
+    color: var(--cOpaqueNavyBlue) ;
+}
+@media only screen and (max-width: 600px) {
+    .button-style{
+        font-size: 12px;
+    }
+    .message-container{
+        font-size: 12px;
+    }
+}
+@media (hover: hover) {
+    .button-style:hover {
+            background-color: var(--cNavyBlue);
+            border: 2px solid var(--cNavyBlue);
+            color: var(--cBeige);
+            cursor: pointer;
+    }
+    .start-game-btn-not-ready:hover,
+    .button-style-not-ready:hover {
+        border: 2px solid var(--cOpaqueNavyBlue);
+        background-color: var(--cOpaqueBeige);
+        color: var(--cOpaqueNavyBlue);
+        cursor: default;
+    }
+}
+
+/* Boards */
+.boards-container{
+    margin-top: var(--marginSmall);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--marginBig);
+    flex-wrap: wrap;
+}
+.player-container{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    align-content: stretch;
+    gap: var(--marginSmall);
+}
+.board-p1, .board-p2{
+    border: 1px solid var(--cNavyBlue);
+    display: grid;
+    grid-template-rows: repeat(8, 50px);
+    grid-template-columns: repeat(8, 50px);
+    
+}
+.coord-div{
+    border: 1px solid var(--cNavyBlue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hidden-coord{
+    background-color: var(--cGrey);
+}
+@media only screen and (max-width: 600px) {
+    .player-name {
+        font-size: 17px;
+    }
+    .board-p1,
+    .board-p2 {
+        grid-template-rows: repeat(8, 45px);
+        grid-template-columns: repeat(8, 45px);
+    }
+}
+@media only screen and (max-width: 350px) {
+    .board-p1,
+    .board-p2 {
+        grid-template-rows: repeat(8, 30px);
+        grid-template-columns: repeat(8, 30px);
+    }
+}
+
+/* Coord hit */
+.spot-hit-blue, .spot-hit-red{
+    font-size: 50px;
+}
+.spot-hit-blue{
+    color: var(--cNavyBlue);
+}
+.spot-hit-red{
+    color: var(--cRed);
+}
+
+@media only screen and (max-width: 600px) {
+    .spot-hit-blue,
+    .spot-hit-red {
+        font-size: 45px;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    .spot-hit-blue,
+    .spot-hit-red {
+        font-size: 30px;
+    }
+}
+
+/* Ships to be positioned */
+.ship-container{
+    display: flex;
+    flex-direction: column;
+    gap: var(--marginSmall);
+    flex-grow: 4;
+}
+.ship-sub-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--marginSmall);
+}
+.rotate-ship-icon{
+    font-size: 30px;
+    cursor:pointer;
+    color: var(--cNavyBlue);
+}
+.the-ship{
+    display: flex;
+    /* touch-action: manipulation; */
+}
+.the-ship-vertical{
+flex-direction: column;
+}
+.ship-part{
+    width: 48px;
+    height: 48px;
+}
+.the-ship-vertical .ship-part{
+    transform:rotate(90deg);
+    transform-origin: center;
+}
+.ship-not-positioned{
+    cursor:grab;
+}
+.ship-part-sunk{
+    filter: var(--cRedFilter);
+}
+.coords-on-drag{
+    background-color: var(--cBeige);
+}
+@media only screen and (max-width: 600px) {
+    .ship-part {
+        width: 43px;
+        height: 43px;
+    }
+}
+@media only screen and (max-width: 350px) {
+    .rotate-ship-icon {
+        font-size: 28px;
+    }
+    .ship-part {
+        width: 28px;
+        height: 28px;
+    }
+}
+@media (hover: hover) {
+    .rotate-ship-icon:hover {
+        color: var(--cBeige);
+    }
+}
+
+/* Individual ship styling */
+/* Ship images source: Battleship vector created by macrovector - https: //www.freepik.com/vectors/battleship */
+.ship-1-part-1{
+    background: url('./images/ship_1.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-1-part-2 {
+    background: url('./images/ship_1.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-1-part-1.ship-part-vertical, .ship-1-part-2.ship-part-vertical{
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+.ship-2-part-1 {
+    background: url('./images/ship_2.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-2-part-2 {
+    background: url('./images/ship_2.png') no-repeat center bottom/cover;
+    background-position: center;
+}
+.ship-2-part-3 {
+    background: url('./images/ship_2.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-2-part-1.ship-part-vertical,
+.ship-2-part-2.ship-part-vertical,
+.ship-2-part-3.ship-part-vertical {
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+.ship-3-part-1 {
+    background: url('./images/ship_3_a.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-3-part-2 {
+    background: url('./images/ship_3_a.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-3-part-3 {
+    background: url('./images/ship_3_b.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-3-part-4 {background: url('./images/ship_3_b.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-3-part-1.ship-part-vertical,
+.ship-3-part-2.ship-part-vertical,
+.ship-3-part-3.ship-part-vertical,
+.ship-3-part-4.ship-part-vertical {
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+.ship-4-part-1 {
+    background: url('./images/ship_4_a.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-4-part-2 {
+    background: url('./images/ship_4_a.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-4-part-3 {
+    background: url('./images/ship_4_b.png') no-repeat center bottom/cover;
+    background-position: left;
+}
+.ship-4-part-4 {
+    background: url('./images/ship_4_b.png') no-repeat center bottom/cover;
+    background-position: right;
+}
+.ship-4-part-1.ship-part-vertical,
+.ship-4-part-2.ship-part-vertical,
+.ship-4-part-3.ship-part-vertical,
+.ship-4-part-4.ship-part-vertical {
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+/* ****** SWITCH MODAL ****** */
+.boards-container{
+    position: relative;
+}
+.switch-modal{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* ****** CURSOR AND HIDE ****** */
+/* cursor target */
+/* Source: "https://www.flaticon.com/free-icons/target" Target icon created by Pixel perfect - Flaticon */
+.cursorTarget{
+    cursor: url('./images/iconTarget.png') 16 16, auto;
+}
+/* hide items */
+.hide{
+    display:none;
+}
+
+/* ****** FOOTER ****** */
+/* Footer */
+footer {
+    /* background-color: purple; */
+    border-top: 5px solid var(--cNavyBlue);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0px 0px 10px 0px;
+    min-height: 30px;
+}
+
+footer p {
+    margin-right: 7px;
+    color: var(--cNavyBlue);
+}
+
+footer a {
+    display: flex;
+    align-items: flex-end;
+}
+
+footer ion-icon {
+    font-size: 20px;
+    padding-left: 5px;
+    color: var(--cNavyBlue);
+}
+
+footer ion-icon:hover {
+    transform: scale(2) rotateZ(360deg);
+}

@@ -175,7 +175,7 @@ function CreatePlayer(type) {
                 return false
             } else {
                 this.shotPositions.push(coord);
-                this.playersTurn = false;
+                // this.playersTurn = false;
                 return true
             }
         },

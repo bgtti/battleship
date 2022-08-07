@@ -1,13 +1,14 @@
 # battleship
 
-Live preview:
+Live preview: https://bgtti.github.io/battleship/
 
 This is a battleship game the user can play against a computer or another human.
-It was written in HTML, CSS, and vanilla JavaScript, with Jest for testing.
+It was written in HTML, CSS, and vanilla JavaScript, and uses Jest for testing.
 
 ![BattleShipPreview](/images/BattleShip_Preview.png)
 
 How the game is structured:
+
 00_index.js:
 contains event listener for the type of game buttons, and allows for the change of game type.
 The game can be of type Human vs Human ("HH") or Human vs Computer ("HC").
@@ -51,3 +52,6 @@ The game will then enter a loop until gameOver is declared.
 About:
 This project was created as part of The Odin Project.
 More information about the project assignment: https://www.theodinproject.com/lessons/node-path-javascript-battleship
+
+How to improve this game:
+the drag and drop could be optimized: A) positioning the drag object relative to the cursor (so the ship's edge is at the cursor's position independent of where it was picked up); B) the coloring on the divs on dragover account for the presence of the already positioned ships.

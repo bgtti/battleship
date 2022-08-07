@@ -52,3 +52,6 @@ The game will then enter a loop until gameOver is declared.
 About:
 This project was created as part of The Odin Project.
 More information about the project assignment: https://www.theodinproject.com/lessons/node-path-javascript-battleship
+
+How to improve this game:
+the drag and drop could be optimized: A) positioning the drag object relative to the cursor (so the ship's edge is at the cursor's position independent of where it was picked up); B) the coloring on the divs on dragover account for the presence of the already positioned ships.

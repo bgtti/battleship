@@ -126,7 +126,7 @@ function GameboardFactory() {
                     counter++;
                     allPositions.push(...shipCoords);
                     if (counter === 3) {
-                        this.boardReady = true; //using?
+                        this.boardReady = true;
                     }
                 }
             }

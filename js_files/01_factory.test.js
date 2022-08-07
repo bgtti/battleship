@@ -1,5 +1,4 @@
 //import
-// const factoryJS = require('./01_factory.js');
 import { CreateShip, GameboardFactory, CreatePlayer } from "./01_factory.js"
 
 //CreateShip

@@ -70,7 +70,6 @@ export let explosionAnimation = (function () {
                         if (parent.querySelector(".spotWasHit") !== null) {
                             parent.querySelector(".spotWasHit").classList.add("hide");
                         }
-                        // parent.classList.remove("hidden-coord");
                     })
                 }
             }, 150);

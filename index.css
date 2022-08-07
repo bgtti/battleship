@@ -130,7 +130,8 @@ body{
     font-size: 15px;
     font-weight: bold;
 }
-.start-game-btn-not-ready{
+.start-game-btn-not-ready,
+.button-style-not-ready{
     border: 2px solid var(--cOpaqueNavyBlue);
     background-color: var(--cOpaqueBeige);
     color: var(--cOpaqueNavyBlue) ;
@@ -150,7 +151,8 @@ body{
             color: var(--cBeige);
             cursor: pointer;
     }
-    .start-game-btn-not-ready:hover {
+    .start-game-btn-not-ready:hover,
+    .button-style-not-ready:hover {
         border: 2px solid var(--cOpaqueNavyBlue);
         background-color: var(--cOpaqueBeige);
         color: var(--cOpaqueNavyBlue);

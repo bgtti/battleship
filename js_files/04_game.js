@@ -2,12 +2,16 @@ import { PositioningShips } from "./03_dragShips.js";
 import { CreatePlayer } from "./01_factory.js";
 import { explosionAnimation } from "./05_explosionAnimation.js";
 import { displayMessages } from "./06_displayMessages.js";
+
 const Game = (function () {
-    //**** Getting necessary elements****
+    //********** HTML ELEMENTS: Getting necessary elements **********
     // HTML elements:
-    // const messageContainerP1 = document.querySelector(".messageContainerP1");//see if necessary
-    // const messageContainerP2 = document.querySelector(".messageContainerP2");//see if necessary
     const gameStartBtn = document.querySelector(".startGameBtn");
+    const playAgainBtn = document.querySelector(".playAgainBtn");
+    let theSwitchModal;
+    let theSwitchBtn;
+    let shipPositioningButtonP1;
+    let shipPositioningButtonP2;
     //coords from board:
     let player1Coords = document.querySelectorAll('[data-p1]');
     let player2Coords = document.querySelectorAll('[data-p2]');
@@ -21,11 +25,10 @@ const Game = (function () {
         player2Board = document.querySelector(".board-p2");
     }
 
-    //**** Initiation: creates players & saves gameType****
+    //********** INITIATION: creates players & saves gameType **********
     let player1;
     let player2;
     let gameType;
-    // let gameStarted = false; //used?
     let gameOver = false;
 
     //hiding other player's coordinates:
@@ -47,21 +50,79 @@ const Game = (function () {
         let playersShipParts = document.querySelectorAll(`.shipPartNotSunk${player}`);
         playersShipParts.forEach(part => { part.classList.add("hide") });
     }
+    //unhide boards (used when game is over)
+    function displayCoordsAndShips() {
+        //make all boards white:
+        player1Coords.forEach(coord => { coord.classList.remove("hidden-coord") });
+        player2Coords.forEach(coord => { coord.classList.remove("hidden-coord") });
+        //display all ships:
+        let allShipParts = document.querySelectorAll(".shipPartNotSunk");
+        allShipParts.forEach(part => { part.classList.remove("hide") });
+    }
 
     //initiation:
     function initiateGame(player1Type, player2Type) { //player types: "Human" or "Computer"
+        gameStartBtn.classList.add('start-game-btn-not-ready');
         player1 = CreatePlayer(player1Type);
         player2 = CreatePlayer(player2Type);
         player2Type === "Computer" ? gameType = "HC" : gameType = "HH";
         gettingBoardCoords();
         displayMessages.displayMessage("positionShipsP1", gameType);
         gameOver = false;
-        if (gameType = "HH") {
-            hidingCoords("p2")
+        hidingCoords("p2");
+        if (gameType === "HH") {
+            hidingCoords("p2");
+            player1CanPositionShips();
         }
     }
 
-    //**** Ship positioning functions ****
+    //********** SWITCH LOGIC: for game type HH **********
+    //open/close theSwitchModal
+    function openSwitchPlayerModal() {
+        theSwitchModal.classList.remove('hide');
+    }
+
+    //allow Player 1 to position ships
+    function player1CanPositionShips() {
+        theSwitchModal = document.querySelector(".switchModal");
+        theSwitchBtn = document.querySelector(".okBtn");
+        theSwitchBtn.addEventListener('click', () => { theSwitchModal.classList.add('hide') }); //******** */
+
+        shipPositioningButtonP1 = document.querySelector(".p1ShipReadyBtn");
+        shipPositioningButtonP2 = document.querySelector(".p2ShipReadyBtn");
+        shipPositioningButtonP2.classList.add("hide");
+
+        shipPositioningButtonP1.addEventListener('click', player2CanPositionShips);
+    };
+
+    //allow Player 2 to position ships
+    function player2CanPositionShips() {
+        if (!shipPositioningButtonP1.classList.contains('button-style-not-ready')) {
+            shipPositioningButtonP1.classList.add("hide");
+            shipPositioningButtonP2.classList.remove("hide");
+            displayMessages.displayMessage("positionShipsP2", gameType);
+            openSwitchPlayerModal();
+            hidingCoords("p1");
+
+            shipPositioningButtonP2.addEventListener('click', startGame);
+        }
+    }
+
+    //switching players
+    function playerSwitch() {
+        openSwitchPlayerModal();
+        if (player1.playersTurn === true) {
+            hidingCoords("p2");
+            settingCursorTarget(player2Board);
+            resettingCursor(player1Board);
+        } else if (player2.playersTurn === true) {
+            hidingCoords("p1");
+            settingCursorTarget(player1Board);
+            resettingCursor(player2Board);
+        }
+    }
+
+    //********** SHIP POSITIONING: take data from dragShips.js and send to player object **********
 
     // placing computer's visual ship parts in appropriate board coordinates
     function visualizingComputerShips() {
@@ -94,10 +155,11 @@ const Game = (function () {
         let p2shipParts;
         if (gameType === "HH") {
             p2ShipCoords = sortShips(PositioningShips.p2shipPosition);
+            p2shipParts = sortShips(PositioningShips.p2shipParts);
         } else {
             player2.playersBoard.positionComputerShips();
-            // TEMPORARY VISUALIZATION OF COMPUTER SHIP POSITION:
-            console.log("positioning c ships")
+            //UNCOMMENT TO SEE COMPUTER SHIP POSITION:
+            console.log("Computer ship position:")
             console.log(player2.playersBoard.ships[0].shipPosition);
             console.log(player2.playersBoard.ships[1].shipPosition);
             console.log(player2.playersBoard.ships[2].shipPosition);
@@ -121,7 +183,7 @@ const Game = (function () {
         }
     }
 
-    //**** Special target cursor for attack ****
+    //********** CURSOR: Special target cursor for attack **********
     function settingCursorTarget(element) {
         element.classList.add("cursorTarget");
     }
@@ -131,34 +193,22 @@ const Game = (function () {
         };
     }
 
-    //**** Function to reset modified HTML elements ****
-    function resettingHTMLElements() {
-        resettingCursor(player1Board);
-        resettingCursor(player2Board);
-        if (gameType === "HC") {
-            gameStartBtn.classList.remove("hide");
-            displayMessages.displayMessage("positionShipsP1", gameType);
-        } else {
-            gameStartBtn.classList.add("hide");
-            displayMessages.displayMessage("positionShipsP1", gameType);
-            //write full HH logic here ******************** needs button after message
-        }
-    }
-
-
-
-    // **** Game over function ****
+    //********** GAME OVER **********
     //What to do when game is over
     function gameIsOver(whoWon) {
-        gameOver === true;
+        gameOver = true;
         player1.playersTurn = false;
         player2.playersTurn = false;
         whoWon === player1 ? displayMessages.displayMessage("p1Wins", gameType) : displayMessages.displayMessage("p2Wins", gameType);
-        ///////*************include button to re-start game */
-        // unhide all ships & make board white
+        resettingCursor(player2Board);
+        resettingCursor(player1Board);
+        setTimeout(() => {
+            playAgainBtn.classList.remove("hide");
+            displayCoordsAndShips()// unhide all ships & make board white
+        }, 1000);
     }
 
-    // **** Attack functions ****
+    //********** ATTACK: functions **********
     //Visual hit on board
     function visualCoordHit(e, hitSuccess, shipParts, targetEl) {
         if (e === "C") {
@@ -187,7 +237,7 @@ const Game = (function () {
                         shipParts = theAttack[2];
                         shipParts.forEach(part => {
                             part.classList.remove("shipPartNotSunk")
-                            part.classList.remove(`.shipPartNotSunk${otherP}`)
+                            part.classList.remove(`shipPartNotSunk${otherP}`)
                         });
                         if (playerAttacked.playersBoard.allShipsSunken() === true) {
                             gameIsOver(playerAttacking);
@@ -212,14 +262,23 @@ const Game = (function () {
                 analyseShot(player2);
             }
 
-            playerAttacking.playersTurn = false;
-            playerAttacked.playersTurn = true;
+            if (gameOver === false) {
+                playerAttacking.playersTurn = false;
+                playerAttacked.playersTurn = true;
+            }
 
             //visual representation of hit on the board
-
             visualCoordHit(e, hitSuccess, shipParts);
 
-            if ((gameType === "HC") && (player2.playersTurn = true)) {
+            //switch players if gameType is HH
+            if ((gameType === "HH") && (gameOver === true)) {
+                setTimeout(() => {
+                    playerSwitch()
+                }, 1000);
+            };
+
+            //computer attack if gameType is HC:
+            if ((gameType === "HC") && (player2.playersTurn === true)) {
                 let coordOfComputerAttack;
                 let coordInBoard;
 
@@ -248,7 +307,7 @@ const Game = (function () {
         };
     }
 
-    // **** Setting Event listeners for hits ****
+    //********** Setting Event listeners for hits **********
     function enableEventListenersOnBoards() {
         for (let coord of player2Coords) {
             coord.addEventListener('click', (e) => {
@@ -261,38 +320,62 @@ const Game = (function () {
             for (let coord of player1Coords) {
                 coord.addEventListener('click', (e) => {
                     if (player2.playersTurn === true) {
-                        boardClick(player2, player2, e);
+                        boardClick(player2, player1, e);
                     }
                 });
             }
         }
     }
-    // **** Starting the game ****
+    //********** STARTING THE GAME **********
     function startGame() {
-        if (!gameStartBtn.classList.contains('start-game-btn-not-ready')) {
-            setShipPosition() //// **** only working for HC
+        function startThisGame() {
+            setShipPosition()
             player1.playersTurn = true;
-            gameStartBtn.classList.add("hide");
             displayMessages.displayMessage("gameStart", gameType);
             gettingBoardCoords();
-            gameStarted = true;
             settingCursorTarget(player2Board);
             enableEventListenersOnBoards();
+        }
+        if (gameType === "HC") {
+            if (!gameStartBtn.classList.contains('start-game-btn-not-ready')) {
+                gameStartBtn.classList.add("hide");
+                startThisGame();
+            }
+        }
+        if (gameType === "HH") {
+            if (!shipPositioningButtonP2.classList.contains('button-style-not-ready')) {
+                shipPositioningButtonP2.classList.add("hide");
+                openSwitchPlayerModal();
+                hidingCoords("p2");
+                startThisGame();
+            }
+        }
+    }
+
+    gameStartBtn.addEventListener('click', () => {
+        startGame();
+    })
+
+    //********** RESET MODIFIED HTML ELEMENTS **********
+    function resettingHTMLElements() {
+        resettingCursor(player1Board);
+        resettingCursor(player2Board);
+        if (gameType === "HC") {
+            gameStartBtn.classList.remove("hide");
+            displayMessages.displayMessage("positionShipsP1", gameType);
+        } else {
+            gameStartBtn.classList.add("hide");
+            displayMessages.displayMessage("positionShipsP1", gameType);
         }
     }
 
 
     return {
         initiateGame,
-        // checkIfGamePossible,
-        startGame,
         resettingHTMLElements,
 
         //for testing only:
-        player1,
-        player2,
         sortShips,
-        setShipPosition,
     }
 })()
 

@@ -1,6 +1,7 @@
 //Dragging ships into position
 //is file: sets the drag and drop functionality and collects the ship's position
-//the ship's position can be requested by game.js to commence the game
+//the ships' positions are requested by game.js to commence the game
+//a polyfill (script of id = DragDropTouch in the HTML document) translates the drag and drop functionality for touch devices.
 
 export let PositioningShips = (function () {
     //draggable items (ships)
@@ -49,11 +50,16 @@ export let PositioningShips = (function () {
     }
 
     //check if all ships were positioned (to enable start game button click):
-    //***********only for H vc C
     function checkIfAllShipsPositioned(player) { //accepts "p1" or "p2"
-        if (player === "p1" && p1shipPosition.length === 4) { //(player === "p1" && p1shipPosition.length === 4) || (player === "p2" && p2shipPosition.length === 4))
+        if (player === "p1" && p1shipPosition.length === 4) {
             let gameStartBtn = document.querySelector(".startGameBtn");
             gameStartBtn.classList.remove('start-game-btn-not-ready');
+
+            let shipPositioningButtonP1 = document.querySelector(".p1ShipReadyBtn");
+            if (shipPositioningButtonP1) { shipPositioningButtonP1.classList.remove('button-style-not-ready'); }
+        } else if (player === "p2" && p2shipPosition.length === 4) {
+            let shipPositioningButtonP2 = document.querySelector(".p2ShipReadyBtn");
+            shipPositioningButtonP2.classList.remove('button-style-not-ready');
         }
     };
 

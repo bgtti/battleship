@@ -3,7 +3,7 @@
 Live preview: https://bgtti.github.io/battleship/
 
 This is a battleship game the user can play against a computer or another human.
-It was written in HTML, CSS, and vanilla JavaScript, with Jest for testing.
+It was written in HTML, CSS, and vanilla JavaScript, and uses Jest for testing.
 
 ![BattleShipPreview](/images/BattleShip_Preview.png)
 

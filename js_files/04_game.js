@@ -159,11 +159,11 @@ const Game = (function () {
         } else {
             player2.playersBoard.positionComputerShips();
             //UNCOMMENT TO SEE COMPUTER SHIP POSITION:
-            console.log("Computer ship position:")
-            console.log(player2.playersBoard.ships[0].shipPosition);
-            console.log(player2.playersBoard.ships[1].shipPosition);
-            console.log(player2.playersBoard.ships[2].shipPosition);
-            console.log(player2.playersBoard.ships[3].shipPosition);
+            // console.log("Computer ship position:")
+            // console.log(player2.playersBoard.ships[0].shipPosition);
+            // console.log(player2.playersBoard.ships[1].shipPosition);
+            // console.log(player2.playersBoard.ships[2].shipPosition);
+            // console.log(player2.playersBoard.ships[3].shipPosition);
             visualizingComputerShips();
         }
 
@@ -205,7 +205,7 @@ const Game = (function () {
         setTimeout(() => {
             playAgainBtn.classList.remove("hide");
             displayCoordsAndShips()// unhide all ships & make board white
-        }, 1000);
+        }, 1500);
     }
 
     //********** ATTACK: functions **********
@@ -271,10 +271,10 @@ const Game = (function () {
             visualCoordHit(e, hitSuccess, shipParts);
 
             //switch players if gameType is HH
-            if ((gameType === "HH") && (gameOver === true)) {
+            if ((gameType === "HH") && (gameOver === false)) {
                 setTimeout(() => {
                     playerSwitch()
-                }, 1000);
+                }, 1500);
             };
 
             //computer attack if gameType is HC:

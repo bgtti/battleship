@@ -1,23 +1,23 @@
 export let explosionAnimation = (function () {
 
     let image1 = new Image(50, 50);
-    image1.src = "../images/explosion01.png";
+    image1.src = "../images/explosion01.PNG";
     image1.classList.add("hide");
 
     let image2 = new Image(50, 50);
-    image2.src = "../images/explosion02.png";
+    image2.src = "../images/explosion02.PNG";
     image2.classList.add("hide");
 
     let image3 = new Image(50, 50);
-    image3.src = "../images/explosion03.png";
+    image3.src = "../images/explosion03.PNG";
     image3.classList.add("hide");
 
     let image4 = new Image(50, 50);
-    image4.src = "../images/explosion04.png";
+    image4.src = "../images/explosion04.PNG";
     image4.classList.add("hide");
 
     let image5 = new Image(50, 50);
-    image5.src = "../images/explosion05.png";
+    image5.src = "../images/explosion05.PNG";
     image5.classList.add("hide");
 
     function showImage(previousImage, newImage) {

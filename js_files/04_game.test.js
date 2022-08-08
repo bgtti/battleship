@@ -1,5 +1,5 @@
-import { Game } from "./04_game.js";
-import * as moduleFactories from "./01_factory.js";
+// import { Game } from "./04_game.js";
+// import * as moduleFactories from "./01_factory.js";
 
 //jest tests passed, but later failed for not finding DOM elements
 // such as gameStartBtn

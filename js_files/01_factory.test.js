@@ -230,6 +230,7 @@ describe("CreatePlayer: checkIfMoveLegal", () => {
     test('checkIfMoveLegal: legal and illegal move', () => {
         const player1 = CreatePlayer("human");
         player1.shotPositions = [9, 10, 11, 12];
+        player1.playersTurn = true;
         player1.checkIfMoveLegal(13)
         const expected = false;
         const expected2 = true;

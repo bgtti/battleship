@@ -169,16 +169,18 @@ function CreatePlayer(type) {
         playerType: type, //computer or human
         playersTurn: false, //true or false
         shotPositions: [], //positions shot on the other player's board
-        shotPositionSuccess: [], //******************NEW */for computer shot
+        shotPositionSuccess: [],
         playersBoard: GameboardFactory(),
         checkIfMoveLegal(coord) {
-            if (this.shotPositions.includes(coord)) {
-                return false
-            } else {
-                this.shotPositions.push(coord);
-                // this.playersTurn = false;
-                return true
+            if (this.playersTurn === true) {
+                if (this.shotPositions.includes(coord)) {
+                    return false
+                } else {
+                    this.shotPositions.push(coord);
+                    return true
+                }
             }
+
         },
         isValidShot(coord) {
             let isValid = true;
@@ -190,7 +192,6 @@ function CreatePlayer(type) {
             return array.sort((a, b) => { return a - b })
         },
         computerSmartShooting() {
-            // const arrayOfMultiples = [8, 16, 24, 32, 40, 48, 56, 64];
             const arrayOfSuccessShots = [...this.reOrderArray(this.shotPositionSuccess)];
             let tentativeArray = [];
             let arrayOfPossibilities = [];
@@ -224,13 +225,9 @@ function CreatePlayer(type) {
 
         computerShooting() {
             //try shooting neighbouring coords
-            console.log("*******COMPUTER SHOOTING STARTS*********** ")
-            console.log("all shots: " + this.shotPositions)
-            console.log("good shots: " + this.shotPositionSuccess)
             let smartCoord;
             if (this.shotPositionSuccess.length !== 0) {
                 smartCoord = this.computerSmartShooting();
-                console.log("smartCoord: " + smartCoord);
                 if (smartCoord !== false) {
                     this.shotPositions.push(smartCoord)
                     return smartCoord
@@ -244,15 +241,12 @@ function CreatePlayer(type) {
             }
             if (!this.shotPositions.includes(randomCoord)) {
                 this.shotPositions.push(randomCoord)
-                console.log("randomCoord: " + randomCoord);
                 return randomCoord.toString();
             }
         },
     }
 
 }
-
-
 
 export {
     CreateShip,

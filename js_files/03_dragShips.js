@@ -181,7 +181,6 @@ export let PositioningShips = (function () {
         player === "p1" ? checkIfAllShipsPositioned("p1") : checkIfAllShipsPositioned("p2");
         removeRotateIcons();
         clearDraggingClass(playerShips);
-
     };
 
     function activatingDragDropELs() {
@@ -190,6 +189,12 @@ export let PositioningShips = (function () {
         };
         while (p2shipPosition.length > 0) {
             p2shipPosition.pop();
+        };
+        while (p1shipParts.length > 0) {
+            p1shipParts.pop();
+        };
+        while (p2shipParts.length > 0) {
+            p2shipParts.pop();
         };
         p1Ships = document.querySelectorAll('.p1Ship');
         p2Ships = document.querySelectorAll('.p2Ship');

@@ -169,19 +169,71 @@ function CreatePlayer(type) {
         playerType: type, //computer or human
         playersTurn: false, //true or false
         shotPositions: [], //positions shot on the other player's board
+        shotPositionSuccess: [],
         playersBoard: GameboardFactory(),
         checkIfMoveLegal(coord) {
-            if (this.shotPositions.includes(coord)) {
-                return false
-            } else {
-                this.shotPositions.push(coord);
-                // this.playersTurn = false;
-                return true
+            if (this.playersTurn === true) {
+                if (this.shotPositions.includes(coord)) {
+                    return false
+                } else {
+                    this.shotPositions.push(coord);
+                    return true
+                }
             }
+
+        },
+        isValidShot(coord) {
+            let isValid = true;
+            if (coord < 1 || coord > 64) { isValid = false };
+            if (isValid === true) { this.shotPositions.includes(coord) ? isValid = false : isValid = true };
+            return isValid
+        },
+        reOrderArray(array) {
+            return array.sort((a, b) => { return a - b })
+        },
+        computerSmartShooting() {
+            const arrayOfSuccessShots = [...this.reOrderArray(this.shotPositionSuccess)];
+            let tentativeArray = [];
+            let arrayOfPossibilities = [];
+
+            function checkHorizontalPossibilities(coord) {
+                const arrayOfMultiples = [8, 16, 24, 32, 40, 48, 56, 64];
+                return arrayOfMultiples.includes(coord);
+            }
+
+            //determine array of possibilities
+            if (this.shotPositionSuccess.length === 1) {
+                //if (arrayOfMultiples.includes(arrayOfSuccessShots[0]))
+                if (!checkHorizontalPossibilities(arrayOfSuccessShots[0])) { tentativeArray.push(arrayOfSuccessShots[0] + 1) };
+                if (!checkHorizontalPossibilities(arrayOfSuccessShots[0] - 1)) { tentativeArray.push(arrayOfSuccessShots[0] - 1) };
+                tentativeArray.push(arrayOfSuccessShots[0] - 8, arrayOfSuccessShots[0] + 8);
+            } else {
+                if ((arrayOfSuccessShots[1] - arrayOfSuccessShots[0] === 1)) {
+                    //tentativeArray.push((arrayOfSuccessShots[0] - 1), (arrayOfSuccessShots[arrayOfSuccessShots.length - 1] + 1));
+                    if (!checkHorizontalPossibilities(arrayOfSuccessShots[0] - 1)) { tentativeArray.push(arrayOfSuccessShots[0] - 1) };
+                    if (!checkHorizontalPossibilities(arrayOfSuccessShots[arrayOfSuccessShots.length - 1])) { tentativeArray.push(arrayOfSuccessShots[arrayOfSuccessShots.length - 1] + 1) };
+                } else {
+                    tentativeArray.push((arrayOfSuccessShots[0] - 8), (arrayOfSuccessShots[arrayOfSuccessShots.length - 1] + 8));
+                }
+            }
+            //determine if items in array of possibilities are valid
+            for (let coord of tentativeArray) {
+                if (this.isValidShot(coord)) { arrayOfPossibilities.push(coord) };
+            }
+            if (arrayOfPossibilities.length >= 1) { return arrayOfPossibilities[0] } else { return false }
         },
 
         computerShooting() {
-            //check if a coord free, then shoot it
+            //try shooting neighbouring coords
+            let smartCoord;
+            if (this.shotPositionSuccess.length !== 0) {
+                smartCoord = this.computerSmartShooting();
+                if (smartCoord !== false) {
+                    this.shotPositions.push(smartCoord)
+                    return smartCoord
+                }
+            }
+            //if not possible or error occurs, then just shoot at random when a coord is free
             function generateRandomCoord() { return Math.floor((Math.random() * 64) + 1) }; //should return a number between (and including) 1 and 64}
             let randomCoord = generateRandomCoord();
             while (this.shotPositions.includes(randomCoord)) {
@@ -195,8 +247,6 @@ function CreatePlayer(type) {
     }
 
 }
-
-
 
 export {
     CreateShip,

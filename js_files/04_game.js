@@ -219,32 +219,48 @@ const Game = (function () {
     }
 
     //Shooting a coord (on board click):
+    //the board click passes the arguments
+    //since in a HC game only the human will be clicking, the playerAttacking will always be player1
     function boardClick(playerAttacking, playerAttacked, e) {
         if (playerAttacking.checkIfMoveLegal(e.currentTarget.dataset) === true) {
-            let theAttack;
-            let hitSuccess;
-            let sankShip;
-            let shipParts = false;
 
-            function analyseShot(player) {
-                let p;
-                let otherP;
-                player === player1 ? p = "p1" : p = "p2";
-                player === player1 ? otherP = "p2" : otherP = "p1";
+            //Variables to be populated according to Player who was attacked
+            let theAttack; //is the return of the GameBoard's receive attack function: [[if ship was hit], [if ship sunk], [HTML elements of ship ("Ship Parts")]]
+            let hitSuccess; //theAttack[0], can be true or false
+            let sankShip; //theAttack[1], can be true or false
+            let shipParts = false; //theAttack[2], if a shit was hit, an array of HTML elements will be here (visual parts)
+
+            //analyseShot checks if attack was successful, if game is over, etc:
+            function analyseShot(player, coordOfComputerAttack) { //first arg: who attacked. second argument only used when computer shoots
+                let shootingPlayer;
+                let otherPlayer;
+                player === player1 ? shootingPlayer = "p1" : shootingPlayer = "p2";
+                player === player1 ? otherPlayer = "p2" : otherPlayer = "p1";
+
                 if (hitSuccess === true) {
-                    displayMessages.displayMessage(`${p}ShotSuccess`, gameType);
+                    displayMessages.displayMessage(`${shootingPlayer}ShotSuccess`, gameType);
+                    if ((gameType === "HC") && (player === player2)) {
+                        player2.shotPositionSuccess.push(parseInt(coordOfComputerAttack)); //communicates successful shots to computer
+                    }
                     if (sankShip === true) {
                         shipParts = theAttack[2];
                         shipParts.forEach(part => {
                             part.classList.remove("shipPartNotSunk")
-                            part.classList.remove(`shipPartNotSunk${otherP}`)
+                            part.classList.remove(`shipPartNotSunk${otherPlayer}`)
                         });
-                        if (playerAttacked.playersBoard.allShipsSunken() === true) {
-                            gameIsOver(playerAttacking);
+
+                        if ((gameType === "HC") && (player !== player1)) {
+                            player2.shotPositionSuccess = []; //used for computer reference in smart shooting method
+                        }
+
+                        if ((player === player2) && (player1.playersBoard.allShipsSunken() === true)) {
+                            gameIsOver(player2);
+                        } else if ((player === player1) && (player2.playersBoard.allShipsSunken() === true)) {
+                            gameIsOver(player1);
                         }
                     }
                 } else {
-                    displayMessages.displayMessage(`${p}ShotMissed`, gameType);
+                    displayMessages.displayMessage(`${shootingPlayer}ShotMissed`, gameType);
                 }
             }
 
@@ -254,7 +270,6 @@ const Game = (function () {
                 hitSuccess = theAttack[0];
                 sankShip = theAttack[1];
                 analyseShot(player1);
-
             } else {
                 theAttack = player1.playersBoard.receiveAttack(e.currentTarget.dataset.p1)
                 hitSuccess = theAttack[0];
@@ -279,6 +294,7 @@ const Game = (function () {
 
             //computer attack if gameType is HC:
             if ((gameType === "HC") && (player2.playersTurn === true)) {
+                resettingCursor(player2Board);
                 let coordOfComputerAttack;
                 let coordInBoard;
 
@@ -295,12 +311,15 @@ const Game = (function () {
                     theAttack = player1.playersBoard.receiveAttack(coordOfComputerAttack);
                     hitSuccess = theAttack[0];
                     sankShip = theAttack[1];
-                    analyseShot(player2);
+                    analyseShot(player2, coordOfComputerAttack);
                     visualCoordHit("C", hitSuccess, shipParts, coordInBoard);
                 }
                 ).then(() => {
-                    player1.playersTurn = true;
-                    player2.playersTurn = false;
+                    if (gameOver === false) {
+                        player1.playersTurn = true;
+                        player2.playersTurn = false;
+                        settingCursorTarget(player2Board);
+                    }
                 });
 
             }

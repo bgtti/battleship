@@ -230,6 +230,7 @@ describe("CreatePlayer: checkIfMoveLegal", () => {
     test('checkIfMoveLegal: legal and illegal move', () => {
         const player1 = CreatePlayer("human");
         player1.shotPositions = [9, 10, 11, 12];
+        player1.playersTurn = true;
         player1.checkIfMoveLegal(13)
         const expected = false;
         const expected2 = true;
@@ -240,6 +241,129 @@ describe("CreatePlayer: checkIfMoveLegal", () => {
     });
 });
 
+describe("CreatePlayer: isValidShot", () => {
+    test('isValidShot makes sure 1 <= coord >= 64, and not shot before', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [2, 3, 4, 5]
+        const expectedTrue = true;
+        const expectedFalse = false;
+        expect(player1.isValidShot(0)).toBe(expectedFalse);
+        expect(player1.isValidShot(65)).toBe(expectedFalse);
+        expect(player1.isValidShot(3)).toBe(expectedFalse);
+        expect(player1.isValidShot(6)).toBe(expectedTrue);
+        expect(player1.isValidShot(1)).toBe(expectedTrue);
+        expect(player1.isValidShot(64)).toBe(expectedTrue);
+    });
+});
+describe("CreatePlayer: reOrderArray", () => {
+    test('reOrderArray works', () => {
+        const player1 = CreatePlayer("computer");
+        const myArray = [3, 2, 5, 4];
+        let myReOrderedArray = player1.reOrderArray(myArray);
+        const expected = [2, 3, 4, 5];
+        expect(myReOrderedArray).toEqual(expect.arrayContaining(expected));
+    });
+});
+describe("CreatePlayer: computerSmartShooting", () => {
+    test('equality of object', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositionSuccess = [2, 3, 4, 5];
+        const myArray = [...player1.reOrderArray(player1.shotPositionSuccess)];
+        expect(myArray).not.toBe(player1.shotPositionSuccess);
+    });
+    test('computerSmartShooting: testing one value', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [2];
+        player1.shotPositionSuccess = [2];
+        const expected = 3;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing one value', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [2, 3];
+        player1.shotPositionSuccess = [2];
+        const expected = 1;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing one value', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [1, 2, 3];
+        player1.shotPositionSuccess = [2];
+        const expected = 10;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing one value', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [9, 10, 11];
+        player1.shotPositionSuccess = [10];
+        const expected = 2;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing one value', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [7, 8];
+        player1.shotPositionSuccess = [8];
+        const expected = 16;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing two values', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [9, 10, 11];
+        player1.shotPositionSuccess = [10, 11];
+        const expected = 12;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing two values', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [10, 11, 12];
+        player1.shotPositionSuccess = [10, 11];
+        const expected = 9;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing two values', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [61, 53];
+        player1.shotPositionSuccess = [61, 53];
+        const expected = 45;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing two values', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [37, 45, 29];
+        player1.shotPositionSuccess = [37, 45];
+        const expected = 53;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: false is passed', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [9, 10, 11, 12];
+        player1.shotPositionSuccess = [10, 11];
+        const expected = false;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing three values', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [2, 9, 10, 11, 12, 18];
+        player1.shotPositionSuccess = [2, 10, 18];
+        const expected = 26;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing three values', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [6, 7, 8];
+        player1.shotPositionSuccess = [6, 7, 8];
+        const expected = 5;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+    test('computerSmartShooting: testing three values', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [4, 5, 6, 7];
+        player1.shotPositionSuccess = [5, 6, 7];
+        const expected = 8;
+        expect(player1.computerSmartShooting()).toBe(expected);
+    });
+});
+
 describe("CreatePlayer: computerShooting", () => {
     test('computerShooting moves yield nr from 0 to 64', () => {
         const player1 = CreatePlayer("computer");
@@ -247,6 +371,21 @@ describe("CreatePlayer: computerShooting", () => {
         const expected2 = 0;
         expect(parseInt(player1.computerShooting())).toBeLessThan(expected1);
         expect(parseInt(player1.computerShooting())).toBeGreaterThan(expected2);
+    });
+    test('computerShooting uses computerSmartShooting when appropriate', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [4, 5];
+        player1.shotPositionSuccess = [5];
+        const expected = 6;
+        expect(player1.computerShooting()).toBe(expected);
+    });
+    test('computerShooting uses computerSmartShooting and saves shot', () => {
+        const player1 = CreatePlayer("computer");
+        player1.shotPositions = [4, 5];
+        player1.shotPositionSuccess = [5];
+        const expected = [4, 5, 6];
+        player1.computerShooting()
+        expect(player1.shotPositions).toEqual(expect.arrayContaining(expected));
     });
 });
 

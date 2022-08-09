@@ -35,7 +35,6 @@ body{
     height: 50px;
     margin: 0 var(--marginSmall) 0 var(--marginSmall);
     filter: var(--cNavyBlueFilter);
-    /* filter: var(--cBeigeFilter); */
 }
 .anchor-2{
     -webkit-transform: scaleX(-1);
@@ -172,7 +171,6 @@ body{
 .player-container{
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     align-content: stretch;
     gap: var(--marginSmall);
 }
@@ -255,7 +253,6 @@ body{
 }
 .the-ship{
     display: flex;
-    /* touch-action: manipulation; */
 }
 .the-ship-vertical{
 flex-direction: column;
@@ -405,7 +402,6 @@ flex-direction: column;
 /* ****** FOOTER ****** */
 /* Footer */
 footer {
-    /* background-color: purple; */
     border-top: 5px solid var(--cNavyBlue);
     display: flex;
     align-items: flex-end;

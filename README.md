@@ -7,7 +7,7 @@ It was written in HTML, CSS, and vanilla JavaScript, and uses Jest for testing.
 
 ![BattleShipPreview](/images/BattleShip_Preview.png)
 
-How the game is structured:
+File structure:
 
 00_index.js:
 contains event listener for the type of game buttons, and allows for the change of game type.
